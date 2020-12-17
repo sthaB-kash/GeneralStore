@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Edit Record</title>
+    <link rel="stylesheet" href="{% static 'css/formStyle.css' %}"/>
+
+</head>
+<body>
+    <form method ="post" action="/update/{{ std.id }}">
+        {% csrf_token %}
+        <label for="name">Student's Name:</label>
+        <input type="text" name="name" id="name" value="{{ std.name }}" required autocomplete="off"><br>
+        <label for="semester" >Semester: </label>
+        <input type="number" name="semester" id="semester" value="{{ std.semester }}" required autocomplete="off" /><br>
+        <label for="program">Program: </label>
+        <input type="text" name="program" id="program" value="{{ std.program }}" required autocomplete="off" /><br>
+        <input type="submit" value="save">
+    </form>
+
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <title>Edit Product</title>
+    <style>
+        #cancelBtn:hover {
+            color: #fff;
+            text-decoration: none;
+        }
+        .container {
+            box-shadow: 2px 3px 5px #2e2e2e;
+        }
+    </style>
+</head>
+<body>
+    <div class="display-4 bg-success p-3 mb-2 text-center text-light">Update Product</div>
+    <div class="container mx-6 p-4 mb-5">
+            <form id="newProduct" onsubmit="addProduct()" method="POST" action="/UpdateProduct/{{product.id }}">
+                {% csrf_token %}
+                <fieldset>
+                    <h5 class="text-muted">Product Details:</h5>
+                    <div class="form-row">
+                        <div class="form-group col-md-3">
+                          <label for="inputId">Product Code:</label>
+                          <input type="text" class="form-control" name="inputId" id="inputId" value="{{product.pid}}" />
+                        </div>
+                        <div class="form-group col-md-9">
+                          <label for="inputName">Product Name:</label>
+                          <input type="text" class="form-control" name="inputName" id="inputName" value="{{ product.pname }}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputQty">Quantity:</label>
+                          <input type="number" class="form-control inputQty" name="inputQty" id="inputQty"  value="{{ product.qty }}" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="inputCategory">Category:</label>
+                            <input type="hidden"  id='hidden-category' value="{{ product.category }}" />
+                           <select class="form-control" name="inputCategory" id="inputCategory"  required>
+                              <option class="text-muted" disabled >Please select a category</option>
+                              <option value="Food">Food</option>
+                              <option value="Stationary">Stationary</option>
+                              <option value="Equipment">Equipment</option>
+                              <option value="Noodles">Noodles</option>
+                              <option value="Chocolates">Chocolates</option>
+                              <option value="Cold-Drinks">Cold-Drinks</option>
+                              <option value="Beer">Beer</option>
+                              <option value="Water">Water</option>
+                              <option value="Biscuits">Biscuits</option>
+                              <option value="Others">Others</option>
+                          </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputMfd" class="">Date of Manufactured:</label>
+                          <input type="date" class="form-control" name="inputMfd" id="inputMfd" value="{{ product.mfd | date:'Y-m-d' }}"  required />
+                          </div>
+                        <div class="form-group col-md-6">
+                          <label for="inputDexp">Date of Expiry:</label>
+                          <input type="date" class="form-control" id="inputDexp" name="inputDexp" value="{{ product.exp | date:'Y-m-d' }}" required />
+                         </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <label for="inputPrice">Price(Rs):</label>
+                          <input type="text" placeholder="Price per unit" class="form-control inputPrice" id="inputPrice" name="inputPrice"
+                                 value="{{product.price }}" required>
+                        </div>
+                        <div class="form-group col-md-6">
+                          <label for="totalPrice">Total Price(Rs):</label>
+                          <input type="text" readOnly value="{{ product.total_price }}" class="form-control totalPrice" id="totalPrice" tabindex="20" />
+                        </div>
+                    </div>
+
+                </fieldset>
+
+                <h5 class="text-muted my-3">Supplier's info:</h5>
+                <div class="form-group">
+                  <label for="inputSupplierName">Name</label>
+                  <input type="text" class="form-control" name="inputSupplierName" id="inputSupplierName" placeholder="Name of supplier"
+                         value = "{{supplier.sname}}" required />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="inputEmail">Email</label>
+                    <input type="email" class="form-control" name="inputEmail" id="inputEmail" placeholder="example@xyz.com"
+                           value ="{{ supplier.email }}" required />
+                  </div>
+
+                  <div class="form-group col-md-6">
+                    <label for="inputContact">Contact:</label>
+                    <input type="text" class="form-control" name="inputContact" id="inputContact" placeholder="+977 9XXXXXXXXX"
+                           value="{{ supplier.contact }}" required />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="inputAddress">Address</label>
+                  <input type="text" class="form-control" name="inputAddress" id="inputAddress" placeholder="Bharatpur-8"
+                         value="{{ supplier.address }}" required />
+                </div>
+                <!--action buttons -->
+                <div class="form-row" style="margin-top:50px !important;margin-bottom:50px;">
+                    <a href="/" target="_self" type="button" id="cancelBtn" class="btn btn-outline-primary form-group col-md-3">Cancel</a>
+                    <span class="form-group col-md-1"></span>
+                    <button type="reset" class="btn btn-danger form-group col-md-3">Clear All</button>
+                     <!-- Button trigger modal and save-->
+                    <span class="form-group col-md-1"></span>
+                    <button type="button" class="btn btn-primary form-group col-md-4 add"
+                            data-toggle="modal" data-target="#msgModal">Update Product</button>
+                </div>
+
+                <!-- Modal -->
+                <div class="modal fade" id="msgModal" tabindex="-1" aria-labelledby="msgModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="msgModalLabel">Update Record</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Would you like to make changes?</p>
+                            </div>
+                            <div class="modal-footer">
+                                 <button type="submit" class="btn btn-outline-success form-row col-md-3">Yes</button>
+                                 <a href="/" target="_self" type="button"  class="btn btn-outline-primary form-group col-md-3" data-dismiss="modal">No</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+     </div>
+    <button onclick="clear()">reset</button>
+    <script>
+        function clear(){
+             alert('reset');
+        }
+        //console.log(inputCategory.selectedIndex);
+        categoryList=[
+                        "Food",
+                        "Stationary",
+                        "Equipment",
+                        "Noodles",
+                        "Chocolates",
+                        "Cold-Drinks",
+                        "Beer",
+                        "Water",
+                        "Biscuits",
+                        "Others"
+           ];
+       category = document.querySelector('#hidden-category').value;
+       //console.log(category);
+       for( i=0;i<10;i++){
+        if(categoryList[i]==category){
+                //console.log(categoryList[i]);
+                break;
+            }
+       }
+       //console.log(i);
+       inputCategory.selectedIndex = i+1;
+       if(i==10)
+        inputCategory.selectedIndex = i;
+
+        //cal total price
+        /*
+        var qty = document.getElementById('inputQty');
+        var inputPrice = document.getElementById('inputPrice');
+        document.getElementById('inputPrice').addEventListener('keyup',calTotalPrice);
+        qty.addEventListener('keyup',calTotalPrice);
+        function calTotalPrice(){
+            if (Number(inputPrice.value)>0){
+                let totalPrice = Number(qty.value) * Number(inputPrice.value);
+                document.getElementById('totalPrice').placeholder = totalPrice.toString();
+                }
+        }*/
+
+    </script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="{% static 'js/calTotalPrice.js' %}" ></script>
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+</body>
+</html>

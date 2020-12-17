@@ -1,0 +1,39 @@
+        .billing-through-qrcode {
+            padding: 10px;
+         }
+
+        .billing-div {
+            width: 700px;
+            font-size: 1rem;
+            margin: 10px auto;
+            position: relative;
+         }
+        .billing-div:hover {
+            box-shadow: 2px 3px 5px grey;
+        }
+        .billing-div h2{
+            font-size: 1.2rem;
+        }
+        .billing-div h4{
+            font-size: 1.1rem;
+        }
+        input {
+            border: none
+        }
+        .customerName, .customerAddress {
+            width:50%;
+            display:inline-block;
+        }
+        .customerName input, .customerAddress input {
+            width: 79%;
+
+        }
+        .customerName label, .customerAddress label {
+            width: 19%;
+
+        }
+        .input-discount {
+            color: #fff;
+            text-align: center;
+            width: 36px !important;
+        }

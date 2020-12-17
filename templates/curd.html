@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CURD</title>
+
+    <style>
+        *{box-sizing: border-box;}
+        table{
+            border-collapse: collapse;
+            width: 60%;
+            margin: auto;
+            border: 2px solid green;
+        }
+        table th{
+            font-weight: bold;
+            background: gray;
+            color: #fff;
+        }
+        #addBtn {
+            background-color: blue;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2rem;
+            padding: 15px;
+            margin: 4px;
+            border-radius: 12px;
+            position: absolute;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/add/" target="_self"><button id="addBtn">Add New</button></a>
+    <h1 style="width:50%; text-align:center; margin:auto;">Details of all students</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Program</th>
+            <th>Semester</th>
+            <th></th>
+        </tr>
+        {% for std in students %}
+        <tr>
+            <td>{{ std.id }}</td>
+            <td>{{ std.name }}</td>
+            <td>{{ std.program }}</td>
+            <td>{{ std.semester }}</td>
+            <td>
+                <a href="/curd/{{ std.id }}"><button>edit</button></a>
+                <a href="/delete/{{ std.id }}"><button>delete</button></a>
+
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

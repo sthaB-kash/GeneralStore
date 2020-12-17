@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Prompt&display=swap');
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+     padding: 0;
+}
+.general-store {
+    display: none;
+}
+
+#searched-data {
+    min-width: 100%;
+    overflow: auto;
+
+}
+tbody {
+    font-size: 0.8rem;
+    font-family: 'Prompt', sans-serif;
+ }
+ span #stock-value {
+    font-size: 0.6rem;
+ }
+
+

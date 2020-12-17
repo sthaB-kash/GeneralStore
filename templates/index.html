@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+  <head>
+      {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/billing.css' %}"/>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!-- jQuery -->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <!--poppins -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+    <title>XYZ GeneralStore</title>
+
+    <style>
+
+    </style>
+
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+        <a class="navbar-brand " href="#"><span class="generalStore" >GeneralStore</span></a>
+
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link active" id="products-tab" data-toggle="tab" href="#products" role="tab" aria-controls="products" aria-selected="true">Products</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="newItem-tab" data-toggle="tab" href="#newItem" role="tab" aria-controls="newItem" aria-selected="true">New Item</a>
+                  </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="billing-tab" data-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a class="nav-link" id="suppliers-tab" data-toggle="tab" href="#suppliers" role="tab" aria-controls="suppliers" aria-selected="false">Suppliers</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="customers-tab" data-toggle="tab" href="#customers" role="tab" aria-controls="customers" aria-selected="false">Customers</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="reports-tab" data-toggle="tab" href="#reports" role="tab" aria-controls="reports" aria-selected="false">Reports</a>
+                </li>
+            </ul>
+
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              More
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a class="dropdown-item" href="#">Import</a>
+              <a class="dropdown-item" href="#">Export</a>
+              <a class="dropdown-item" href="#">Logout</a>
+            </div>
+          </div>
+
+        </div>
+        <span class="navbar-text" style="float:right">
+             <span class="">Hello, {{request.user}}
+                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+							width="36" height="36"
+							viewBox="0 0 226 226"
+							style=" fill:#000000;">
+							<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#2ecc71"><path d="M113,21.1875c-50.62378,0 -91.8125,41.18872 -91.8125,91.8125c0,50.62378 41.18872,91.8125 91.8125,91.8125c50.62378,0 91.8125,-41.18872 91.8125,-91.8125c0,-50.62378 -41.18872,-91.8125 -91.8125,-91.8125zM113,35.3125c42.98194,0 77.6875,34.70557 77.6875,77.6875c0,42.98194 -34.70556,77.6875 -77.6875,77.6875c-42.98193,0 -77.6875,-34.70556 -77.6875,-77.6875c0,-42.98193 34.70557,-77.6875 77.6875,-77.6875zM113,56.5c-19.42187,0 -35.3125,15.89063 -35.3125,35.3125c0,10.7041 4.99341,20.22192 12.58008,26.70508c-15.89062,8.24878 -26.70508,24.85669 -26.70508,43.91992h14.125c0,-19.5874 15.7251,-35.3125 35.3125,-35.3125c19.58741,0 35.3125,15.7251 35.3125,35.3125h14.125c0,-19.06323 -10.81445,-35.67114 -26.70508,-43.91992c7.58667,-6.48316 12.58008,-16.00098 12.58008,-26.70508c0,-19.42187 -15.89062,-35.3125 -35.3125,-35.3125zM113,70.625c11.78003,0 21.1875,9.40747 21.1875,21.1875c0,11.78003 -9.40747,21.1875 -21.1875,21.1875c-11.78003,0 -21.1875,-9.40747 -21.1875,-21.1875c0,-11.78003 9.40747,-21.1875 21.1875,-21.1875z"></path></g></g></svg>
+                 <a href="{% url 'login' %}">Logout</a>
+             </span>
+        </span>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown"
+                onclick="setInterval(function(){document.querySelector('#navbarNavDropdown').classList.remove('show');},5000)"
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+      </nav>
+
+
+    {% if messages %}
+        <ul class="messages text-center">
+            {% for message in messages %}
+                <div class="alert alert-primary" role="alert" data-delay="2000">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+      <!--tab contents-->
+      <div class="tab-content" id="myTabContent">
+          <!--products tab-->
+        <div class="tab-pane fade active show" id="products" role="tabpanel" aria-labelledby="products-tab">
+            <!--all product details-->
+            <div class="container">
+                <div class=" my-4 p-2 row ">
+                    <input class="form-control col-sm-12 col-md-4 mr-sm-2 m-auto" name="inputSearch" type="text"
+                           id="inputSearch" placeholder="Enter product name/code/supplier/category" aria-label="Search" />
+                    <!--<button class="col-sm-6 col-md-3 col-lg-2 btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+                </div>
+
+
+                <div id="searched-data"><!--searched data will be placed after ajax response-->
+                    <p class = "display-5">Product Details: <span class="text-primary">({{ sn }})</span></p>
+                    <table class="table table-bordered table-hover table-striped table-sm">
+                        <thead class="bg-info">
+                            <tr>
+                                <th>S.N.</th>
+                                <th>P.Code</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Date of Entry</th>
+                                <th>Date of MF.</th>
+                                <th>Date of Exp.</th>
+                                <th>Category</th>
+                                <th>Supplier</th>
+                                <th>Status</th>
+                                <th> </th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-data">
+                        {% for product in products %}
+                            <tr id="{{ product.id }}">
+                                <td class="text-center showDetails">{{ forloop.counter }}.</td>
+                                <td class=" showDetails">{{ product.pid }}</td>
+                                <td class=" showDetails">{{ product.pname }}</td>
+                                <td class="text-right  showDetails">{{ product.price }}</td>
+                                <td class=" showDetails">{{ product.doe }}</td>
+                                <td class=" showDetails">{{ product.mfd }}</td>
+                                <td class=" showDetails">{{ product.exp }}</td>
+                                <td class=" showDetails">{{ product.category }}</td>
+                                <td class=" showDetails">{{product.supplier.sname}}</td>
+                                <td class="text-center">
+                                    <span class="btn btn-outline-info ">
+                                    {% if product.qty > 0 %}
+                                        <small class="well well-small ">in-stock</small>
+                                    {% else %}
+                                        <small>out-of-stock</small>
+                                    {% endif %}
+                                        <span class="btn btn-dark p-1 rounded-circle" id="stock-value">{{ product.qty }}</span>
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/EditProduct/{{ product.id }}"><button class="btn btn-success">
+                                        <small class="well well-lg">Edit</small>
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg>
+                                    </button></a>
+                                    <a id="/DeleteProduct/{{ product.id }}"><button class=" btn btn-danger" data-toggle="modal" data-target="#deleteModal" onclick="deleteProduct({{product.id}},'{{product.pname}}')">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                        </svg>
+                                    </button></a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <!-- Modal -->
+                    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header bg-danger text-white">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Product</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body" >
+                            Are you sure to delete this product?
+                              <br/>
+                            Product Name:<span id="deleteMsg"></span>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" onclick="alert('no')">No</button>
+                            <button type="button" class="btn btn-outline-primary btn-delete-product" data-dismiss="modal"
+                             onclick="alert('yes')">Yes</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="show-selected-product"></div>
+                </div>
+            </div>
+        </div>
+
+         <!--newItem tab-->
+         <div class="tab-pane fade" id="newItem" role="tabpanel" aria-labelledby="newItem-tab">
+             <div class="container p-5">
+                 <div class="row display-4 text-muted"><span class="mx-auto">Insert New Item</span><p>&nbsp;</p></div>
+                 <div class="container" style="width:60%">
+                    <form id="newProduct" onsubmit="addProduct()" method="POST" action="/add_product/">
+                        {% csrf_token %}
+                        <fieldset>
+                            <h5 class="text-muted">Product Details:</h5>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                  <label for="inputId">Product Code:</label>
+                                  <input type="text" class="form-control" name="inputId" id="inputId" placeholder="J8JFD"
+                                         autocomplete="Off" pattern="^[a-zA-Z0-9.-]*$">
+                                </div>
+                                <div class="form-group col-md-9">
+                                  <label for="inputName">Product Name:</label>
+                                  <input type="text" class="form-control" name="inputName" id="inputName" placeholder="example"
+                                         pattern="^[a-zA-Z0-9.-+_ ]{2,50}$" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                  <label for="inputQty">Quantity:</label>
+                                  <input type="number" class="form-control inputQty" name="inputQty" id="inputQty"
+                                          placeholder="45" min="1" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label for="inputCategory">Category:</label>
+                                  <select class="form-control" name="inputCategory" id="inputCategory" required>
+                                      <option class="text-muted" disabled>Please select a category</option>
+                                      <option value="Food">Food</option>
+                                      <option value="Stationary">Stationary</option>
+                                      <option value="Equipment">Equipment</option>
+                                      <option value="Noodles">Noodles</option>
+                                      <option value="Chocolates">Chocolates</option>
+                                      <option value="Cold-Drinks">Cold-Drinks</option>
+                                      <option value="Beer">Beer</option>
+                                      <option value="Water">Water</option>
+                                      <option value="Biscuits">Biscuits</option>
+                                      <option value="Others">Others</option>
+                                  </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                  <label for="inputMfd">Date of Manufactured:</label>
+                                  <input type="date" class="form-control" name="inputMfd" id="inputMfd" required />
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label for="inputDexp">Date of Expiry:</label>
+                                  <input type="date" class="form-control" id="inputDexp" name="inputDexp" required />
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                  <label for="inputPrice">Price(Rs):</label>
+                                  <input type="decimal" placeholder="Price per unit" class="form-control inputPrice" id="inputPrice" name="inputPrice" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                  <label for="totalPrice">Total Price(Rs):</label>
+                                  <input type="text" readOnly placeholder="000.00" class="form-control totalPrice" id="totalPrice" tabindex="20" />
+                                </div>
+                            </div>
+
+                        </fieldset>
+
+                        <h5 class="text-muted my-3">Supplier's info:</h5>
+                        <div class="form-group">
+                          <label for="inputSupplierName">Name</label>
+                          <input type="text" class="form-control" name="inputSupplierName" id="inputSupplierName"
+                                 pattern="^[a-zA-Z0-9.-_+ ]{2,}$" placeholder="Name of supplier" required />
+                        </div>
+
+                        <div class="form-row">
+                          <div class="form-group col-md-6">
+                            <label for="inputEmail">Email</label>
+                            <input type="email" class="form-control" name="inputEmail" id="inputEmail" placeholder="example@xyz.com" required />
+                          </div>
+
+                          <div class="form-group col-md-6">
+                            <label for="inputContact">Contact:</label>
+                            <input type="number" class="form-control" name="inputContact" id="inputContact" pattern="^[0-9]{9,10}$"
+                                   placeholder="Mobile/Phone" required />
+                          </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="inputAddress">Address</label>
+                          <input type="text" class="form-control" name="inputAddress" id="inputAddress" placeholder="Bharatpur-8"
+                                 pattern="^[ a-zA-Z,0-9_./()-+]${3,}" required />
+                        </div>
+
+                        <input type="reset" class="btn btn-danger col-md-4" value="Clear All"/>
+                         <!-- Button trigger modal and save-->
+                        <button type="submit" class="btn btn-primary  col-md-4 add" data-toggle="modal1" data-target="#msgModal">Add Product</button>
+
+                      </form>
+
+
+
+                 </div>
+             </div>
+        </div>
+        <!--billing tab-->
+        <div class="tab-pane fade" id="billing" role="tabpanel" aria-labelledby="billing-tab">
+
+                <div class="billing-through-qrcode">
+                    <a href="" ><button class="btn btn-success" id="qrcode-billing">Billing through QR Code</button></a>
+                </div>
+                <div class="billing-div card text-center">
+                    <div class="card-header ">
+                        <div class="our-info">
+                            <h2>XYZ General Store</h2>
+                            <h4>Bharatpur-8, Chitwan</h4>
+                            <p class="mb-0">9865183709</p>
+                        </div>
+                        <div class="customer-info  text-left ">
+                            <div class="customerName ">
+                                <label for="customer-info">Name:</label>
+                                <input type="text" placeholder="Customer's Name" id="customer-info" name="customer-info" />
+                            </div>
+                            <label class="bill-datetime text-right my-1" style="width:40%;display:inline-block;">Nov 29, 2020 12:32:45 PM</label>
+
+                            <div  class="customerAddress">
+                                <label for="customer-address">Address:</label>
+                                <input type="text" name="customer-address" id="customer-address" placeholder="Address of customer" />
+                            </div>
+                            <div class="text-right" style="width:40%;display:inline-block;">
+                                <label for="customer-contact">Ph./Mobile:</label>
+                                <input type="text" name="customer-contact" id="customer-contact" placeholder="--------------------------------" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="purchase-item-details card-body" >
+                        <table class='table text-center table-dark'>
+                            <thead>
+                                <tr>
+                                    <th>S.n</th><th class="text-left">Particulars</th><th>Qty</th><th>Price/unit</th><th>Total Price(Rs.)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="items">
+                                <tr>
+                                    <td>1.</td>
+                                    <td class="text-left input-particulars">
+                                        <input type="text" style="width:100%; border: none" class="particular"/>
+                                    </td>
+                                    <td class="input-qty">
+                                        <input type="number" style=" width: 100px; border: none" id="1" class="last qty"/>
+                                     </td>
+                                    <td class="text-right pr-5 input-price">0.00</td>
+                                    <td class="text-right pr-5">0.00</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" rowspan="3" class="text-left"><p>In words:</p></td>
+                                    <td>Total Amount:</td><td class="text-right pr-5">5000.00</td>
+                                </tr>
+                                <tr><td>Discount(%)<input type="text" class="input-discount" placeholder="0"/></td>
+                                    <td class="text-right pr-5">56.45</td></tr>
+                                <tr><td>Grand Total:</td><td class="text-right pr-5">45343.56</td></tr>
+                                <tr><td colspan="5">Thank You!<br/>~~Visit Again~~</td></tr>
+                            </tfoot>
+                        </table>
+                        <div class="sold-by text-right text-muted"><p>SoldBy: UserName</p></div>
+                    </div>
+                </div>
+
+                <!--print button-->
+                <div style="width:50%; margin: 50px auto;">
+                    <button class="btn  btn-outline-success " style="width:100%;">Print</button>
+                </div>
+
+            <!--only for testing start -->
+            <input type="text" class="particular" />
+            <button id="showall">show all</button>
+
+            {% block billing-content %}{% endblock billing-content %}
+            <div class="fetch-info">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>qty</th>
+                        <th>price</th>
+                    </tr>
+                    </thead>
+                    <tbody class="fetched-content"></tbody>
+                </table>
+            </div>
+            <!--only for testing end-->
+
+
+
+
+        </div>
+        <!--suppliers tab-->
+        <div class="tab-pane fade" id="suppliers" role="tabpanel" aria-labelledby="suppliers-tab">
+             <div class="supplier-info container">
+                 <table class="table table-hover">
+                     <thead>
+                        <tr>
+                            <th>SN</th><th>Supplier's Name</th><th>Address</th><th>Email</th><th>Contact</th><th></th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {% for supplier in suppliers %}
+                            <tr>
+                                 <td class="text-center">{{ forloop.counter }}.</td>
+                                 <td>{{ supplier.sname }}</td>
+                                 <td>{{ supplier.address }}</td>
+                                 <td>{{ supplier.email }}</td>
+                                <td>{{ supplier.contact }}</td>
+                                <td class="text-center">
+                                    <a href="/EditProduct/{{ supplier.id }}"><button class="btn btn-success">
+                                        <small class="well well-lg">Edit</small>
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                        </svg>
+                                    </button></a>
+                                    <a href="/DeleteProduct/{{ supplier.id }}" title="Delete"><button class=" btn btn-danger">
+                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                        </svg>
+                                    </button></a>
+                                </td>
+                             </tr>
+                        {% endfor %}
+                     </tbody>
+                 </table>
+             </div>
+        </div>
+        <!--customer tab-->
+        <div class="tab-pane fade" id="customers" role="tabpanel" aria-labelledby="customers-tab">
+            <p class="display-1">my customers</p>
+        </div>
+        <!--reports tab-->
+        <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
+            <p class=" display-1">all reports</p>
+        </div>
+
+      </div>
+
+      <!--about general store-->
+      <div class="general-store text-center mt-5 pt-5">
+        <p class="display-1 text-primary"> XYZ GeneralStore</p>
+        <p class="text-muted">Bikash Shrestha</p>
+        <div class="display-4 text-dark">
+            short description about GeneralStore
+        </div>
+      </div>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+
+  <script>
+  $( function() {
+    setTimeout(function(){
+        $('.alert').slideUp();
+        $('.alert').alert('close');
+    },2000);
+
+    $('#inputSupplierName').focus(function(){
+       $(this).autocomplete({
+          source: "{% url 'suppliers' %}"
+       });
+    });
+
+    $('#inputSupplierName').change(function(){
+        $.ajax({
+            url: '{% url 'auto_fill_supplier_info' %}',
+            type: 'get',
+            data: { 'name': $(this).val()},
+            success: function(response){
+                $('#inputEmail').val(response.email);
+                $('#inputAddress').val(response.address);
+                $('#inputContact').val(response.contact);
+                console.log(response);
+            }
+        });
+    });
+
+
+    $('#showall').click(function(){
+        $.ajax({
+            url: ' {% url "get_product_details" %}',
+            type: 'get',
+            data: {'name': 'bikash'},
+            dataType: 'json',
+            success: function(response){
+                console.log(typeof(response));
+                console.log(response);
+                console.log(response[0]);
+                console.log(response[0].pname);
+                $('.fetched-content').append("<tr><td>"+response[0].id+"</td><td>"+response[0].pname+"</td><td>"+response[0].qty+
+                "</td><td>"+response[0].price+"</td></tr>");
+            },
+            error: function(error){
+                alert(error);
+                console.log(error);
+            }
+        });
+    });
+
+    $('#inputSearch').keyup(function(){
+        //alert($(this).val());
+        /*var xmlhttp = new XMLHTTPRequest();
+        xmlhttp.onreadystatechange = function(){
+            document.getElementById('searched-data').innerHTML = xmlhttp.responseText;
+        }
+        xmlhttp.open('GET', 'search?data='+$(this).val(), true)
+        xmlhttp.send();*/
+
+        $.ajax({
+            url: '{% url 'search' %}',
+            type: 'get',
+            data: { 'data': $(this).val()},
+            success: function(response){
+                $('#searched-data').html(response);
+            }
+        });
+     });
+
+     //show when respective row clicked
+     $('.showDetails').click(function(){
+        //alert($(this).parent().attr("id"));
+        $.ajax({
+            url: '{% url 'showDetails' %}',
+            type: 'get',
+            data: { 'id': $(this).parent().attr("id")},
+            success: function(response){
+                $('#show-selected-product').html(response);
+            }
+        });
+     });
+
+    //------------------------dynamic billing------------------------------------------
+    //$('#billing-tab').tab('show');
+    $('#qrcode-billing').click(function(){
+        $.ajax({
+            url: '{% url "QrcodeBilling" %}',
+            type: 'get',
+            data: {},
+            success: function(response){
+                $('body').append(response);
+            }
+        });
+
+    });
+    function autocompleteProduct(){
+        $(".particular").autocomplete({
+          source: "{% url 'products' %}"
+        });
+    }
+    autocompleteProduct();
+    function getQty(){
+        $('.particular').blur();
+    }
+    var tr=1;
+    function checkForNewRow(){
+        $('.last').keyup(function(e){
+        $(this).removeClass('last');
+        //alert($(this).attr('id'));
+        if(tr==$(this).attr('id'))
+            if(e.keyCode===13){
+                newRow();
+            }
+        });
+    }
+
+    function bgColor(){
+        $('.items input').blur(function(){
+            $(this).addClass('bg-dark');
+            $(this).addClass('text-white');
+        });
+
+        $('.items input').focus(function(){
+            $(this).removeClass('bg-dark');
+            $(this).removeClass('text-white');
+            //$(this).parent().parent().addClass('text-white');
+         });
+    }
+    bgColor();
+    checkForNewRow();
+
+    function newRow(){
+        tr+=1;//alert(tr);
+        $('tbody.items').append(
+            '<tr>'+
+                '<td>'+tr+'.</td>'+
+                '<td class="text-left input-particulars">'+
+                    '<input type="text" style="width:100%; border: none;" class="particular particular-'+tr+' bg-dark"/>'+
+                '</td>'+
+                '<td class="input-qty">'+
+                    '<input type="number" style=" width: 100px; border: none" id="'+tr+'" class="last qty bg-dark"/>'+
+                  '</td>'+
+                '<td class="text-right pr-5 input-price">0.00</td>'+
+                '<td class="text-right pr-5">0.00</td>'+
+            '</tr>'
+        );
+        bgColor();
+        checkForNewRow();
+        autocompleteProduct();
+        var focusParticular = ".particular-"+tr;
+        $(focusParticular).focus();
+   }
+   $('.input-discount').blur(function(){
+        $(this).addClass('bg-dark');
+        $(this).addClass('text-white');
+   });
+   $('.input-discount').focus(function(){
+        $(this).removeClass('bg-dark');
+        $(this).removeClass('text-white');
+   });
+   //--------------dynamic billing end --------------------------
+  });
+
+  </script>
+  <script src="{% static 'js/index.js' %}" ></script>
+  <script src="{% static 'js/calTotalPrice.js' %}" ></script>
+
+  </body>
+</html>

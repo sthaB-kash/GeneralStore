@@ -1,0 +1,40 @@
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+form {
+    width: 50%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid gray;
+    padding: 20px;
+    box-shadow: 2px 3px 5px #2e2e2e;
+}
+input {
+    width: 60%;
+    //position: relative;
+    font-size: 1rem;
+    padding: 5px;
+    margin: 3px;
+    border: 1px solid green;
+}
+
+label {
+    width: 25%;
+    padding: 5px;
+    font-size: 1.2rem;
+    display:inline-block;
+}
+input[type="submit"] {
+    width: 20%;
+    padding: 5px;
+    font-size: 1.2 rem;
+    position: relative;
+    left:45%;
+    //transform: translate(-20%, 20);
+    margin-top: 6px;
+}
+input[type="submit"]:hover, input[type="submit"]:focus {
+    background-color: green;
+    color: #fff;
+}

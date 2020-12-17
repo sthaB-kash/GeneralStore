@@ -1,0 +1,202 @@
+
+<!-- Modal -->
+<div class="modal fade modal-dialog-scrollable"
+     id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Product Details:</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="btn btn-danger text-white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body " id="accordion">
+        <h3>QR Code</h3>
+        <span>
+          <p class="text-center">
+          <img class="rounded" src="{{product.qr_code.url}}" width="200" height="200" alt="qrcode"/>
+        </p>
+        </span>
+        <h3>Product:</h3>
+        <form class="needs-validation" method="POST" action="/UpdateProduct/{{product.id }}" >
+          {% csrf_token %}
+          <div class="form-row text-muted">
+            <small class="col-md-6 mb-3">{{ product.doe }}</small>
+            <small class="col-md-6 mb-3">by: username</small>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationCustom01">Product Code:</label>
+              <input type="text" class="form-control" id="validationCustom01"  name="inputId" value="{{ product.pid }}"
+                     pattern="^[a-zA-Z0-9.-]{1,10}$" />
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="validationCustom02">Product Name:</label>
+              <input type="text" class="form-control" id="validationCustom02" value="{{ product.pname }}" pattern="^[a-zA-Z0-9.- ]{2,30}$"
+                     name="inputName" required>
+              <div class="valid-feedback">
+                Looks good!
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <input type="hidden" id="hidden-category" value="{{ product.category }}">
+              <label for="validationCustom03">Category:</label>
+               <select class="custom-select" id="validationCustom03" name="inputCategory"required>
+                  <option selected disabled value="">Choose...</option>
+                  <option value="Food">Food</option>
+                  <option value="Stationary">Stationary</option>
+                  <option value="Equipment">Equipment</option>
+                  <option value="Noodles">Noodles</option>
+                  <option value="Chocolates">Chocolates</option>
+                  <option value="Cold-Drinks">Cold-Drinks</option>
+                  <option value="Beer">Beer</option>
+                  <option value="Water">Water</option>
+                  <option value="Biscuits">Biscuits</option>
+                  <option value="Others">Others</option>
+               </select>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="validationCustom04">Quantity:</label>
+              <input type="number" class="form-control inputQty" id="validationCustom04" name="inputQty" min="1"
+                     value="{{ product.qty}}" oninput="calTotalPrice()" required>
+              <div class="invalid-feedback">
+                Please provide a valid QTY.
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationCustom05">Price:</label>
+              <input type="decimal" class="form-control inputPrice" id="validationCustom05" name="inputPrice"
+                     oninput="calTotalPrice()" value="{{ product.price }}" required />
+              <div class="invalid-feedback">
+                Please provide valid price, must be number.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="validationCustom06">Total:</label>
+              <input type="text" class="form-control totalPrice" id="validationCustom06"  value="{{ product.total_price }}"readonly required>
+              <div class="invalid-feedback">
+                Total price
+              </div>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="validationCustom07">Date of Manufactured:</label>
+              <input type="date" class="form-control" id="validationCustom07" name="inputMfd" value="{{ product.mfd | date:'Y-m-d' }}" required>
+              <div class="invalid-feedback">
+                Please provide a valid date.
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="validationCustom08">Date of Expiry:</label>
+              <input type="date" class="form-control" id="validationCustom08" name="inputDexp" value="{{ product.exp | date:'Y-m-d' }}" required>
+              <div class="invalid-feedback">
+                Please provide a valid Expiry date.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+              <label class="form-check-label" for="invalidCheck">
+                Make Changes
+              </label>
+              <div class="invalid-feedback">
+                You must agree before submitting.
+              </div>
+            </div>
+          </div>
+          <input type="hidden" value="0" name="noSupplier"/>
+          <button class="btn btn-success form-row col-12" type="submit">Update Product Details</button>
+        </form>
+        <h3>Supplier:</h3>
+          <div>
+            <div class="form-row">
+              <div class="col-12 mb-2">
+                <label for="supplier-name">Suppler's Name:</label>
+                <input type="text" class="form-control" name="inputSupplierName" id="supplier-name" value="{{ product.supplier.sname }}"readonly />
+              </div>
+              <div class="col-12 mb-2">
+                <label for="address">Address:</label>
+                <input type="text" class="form-control" name="address" id="address"  value="{{ product.supplier.address }}"readonly />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="col-12 mb-2">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" name="email" id="email" value="{{ product.supplier.email }}"readonly />
+              </div>
+              <div class="col-12 mb-2">
+                <label for="contact">Contact:</label>
+                <input type="text" class="form-control" name="contact" id="contact"  value="{{ product.supplier.contact }}"readonly />
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+</script>
+<script>
+$( "#accordion" ).accordion();
+$('#exampleModal').modal('show')
+
+    categoryList=[
+                    "Food",
+                    "Stationary",
+                    "Equipment",
+                    "Noodles",
+                    "Chocolates",
+                    "Cold-Drinks",
+                    "Beer",
+                    "Water",
+                    "Biscuits",
+                    "Others"
+       ];
+   category = document.querySelector('#hidden-category').value;
+   //console.log(category);
+   for( i=0;i<10;i++){
+    if(categoryList[i]==category){
+            //console.log(categoryList[i]);
+            break;
+        }
+   }
+   //console.log(i);
+   //console.log("selected:", validationCustom03.selectedIndex);
+   validationCustom03.selectedIndex = i+1;
+   if( i==10){
+   //console.log(validationCustom03.selectedIndex);
+    validationCustom03.selectedIndex = i;
+   }
+
+</script>

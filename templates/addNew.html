@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Add New</title>
+    <link rel="stylesheet" href="{% static 'css/formStyle.css' %}"/>
+    <style>
+    </style>
+</head>
+<body>
+    <form method ="post" action="/insert/">
+        {% csrf_token %}
+        <label for="name">Student's Name:</label>
+        <input type="text" name="name" id="name" placeholder="Enter your name" required autocomplete="off" /><br>
+        <label for="semester" >Semester: </label>
+        <input type="number" name="semester" id="semester" placeholder="enter semester" required autocomplete="off" /><br>
+        <label for="program">Program: </label>
+        <input type="text" name="program" id="program" placeholder="enter program" required autocomplete="off" /><br>
+        <input type="submit" value="save">
+
+        <!-- message -->
+        {% if messages %}
+            {% for message in messages %}
+                <script>window.alert({{message}});</script>
+                <h1>{{message}}</h1>
+            {% endfor %}
+        {% endif %}
+    </form>
+
+</body>
+</html>
