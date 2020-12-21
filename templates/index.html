@@ -22,7 +22,7 @@
     <title>XYZ GeneralStore</title>
 
     <style>
-
+    .qty{text-align: right;}
     </style>
 
   </head>
@@ -311,6 +311,7 @@
                 <div class="billing-through-qrcode">
                     <a href="" ><button class="btn btn-success" id="qrcode-billing">Billing through QR Code</button></a>
                 </div>
+
                 <div class="billing-div card text-center">
                     <div class="card-header ">
                         <div class="our-info">
@@ -346,23 +347,23 @@
                                 <tr>
                                     <td>1.</td>
                                     <td class="text-left input-particulars">
-                                        <input type="text" style="width:100%; border: none" class="particular"/>
+                                        <input type="text" style="width:100%; border: none" class="particular particular-1"/>
                                     </td>
                                     <td class="input-qty">
-                                        <input type="number" style=" width: 100px; border: none" id="1" class="last qty"/>
+                                        <input type="number" style=" width: 100px; border: none" id="1" class="last qty qty-1"/>
                                      </td>
-                                    <td class="text-right pr-5 input-price">0.00</td>
-                                    <td class="text-right pr-5">0.00</td>
+                                    <td class="text-right pr-5 input-price price price-1">0.00</td>
+                                    <td class="text-right pr-5 total total-1">0.00</td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="3" rowspan="3" class="text-left"><p>In words:</p></td>
-                                    <td>Total Amount:</td><td class="text-right pr-5">5000.00</td>
+                                    <td>Total Amount:</td><td class="text-right pr-5 total-amt">00.00</td>
                                 </tr>
-                                <tr><td>Discount(%)<input type="text" class="input-discount" placeholder="0"/></td>
-                                    <td class="text-right pr-5">56.45</td></tr>
-                                <tr><td>Grand Total:</td><td class="text-right pr-5">45343.56</td></tr>
+                                <tr><td>Discount(%)<input type="text" class="input-discount text-white bg-dark" placeholder="0"/></td>
+                                    <td class="text-right pr-5 dis-val">00.00</td></tr>
+                                <tr><td>Grand Total:</td><td class="text-right pr-5 g-total">00.00</td></tr>
                                 <tr><td colspan="5">Thank You!<br/>~~Visit Again~~</td></tr>
                             </tfoot>
                         </table>
@@ -370,6 +371,8 @@
                     </div>
                 </div>
 
+                <!-- qty input for product -->
+                <div id="qty-qrcode"></div>
                 <!--print button-->
                 <div style="width:50%; margin: 50px auto;">
                     <button class="btn  btn-outline-success " style="width:100%;">Print</button>
@@ -484,7 +487,7 @@
                 $('#inputEmail').val(response.email);
                 $('#inputAddress').val(response.address);
                 $('#inputContact').val(response.contact);
-                console.log(response);
+                //console.log(response);
             }
         });
     });
@@ -551,11 +554,12 @@
             type: 'get',
             data: {},
             success: function(response){
-                $('body').append(response);
+                $('#qty-qrcode').html(response);
             }
         });
 
     });
+
     function autocompleteProduct(){
         $(".particular").autocomplete({
           source: "{% url 'products' %}"
@@ -563,8 +567,68 @@
     }
     autocompleteProduct();
     function getQty(){
-        $('.particular').blur();
+        $('.particular').blur(function(){
+           let id;
+           var currentRow = $(this).closest("tr");
+           $.ajax({
+            url: '{% url "qty_and_price" %}',
+            type: 'get',
+            data : {'product' : $(this).val() },
+            dataType: 'json',
+            success: function(response){
+                //console.log(response);
+                id='.qty-'+1;
+                //$(id).val(response.qty);
+
+               currentRow.find(".qty").attr({
+                    "max": response.qty,
+                    "min": 0
+               });
+               currentRow.find(".price").html(response.price.toFixed(2)); // get current row 2nd table cell TD value
+               $(currentRow.find('.qty')).keyup(function(){
+                    currentRow.find('.total').html(
+                        ($(this).val()*response.price).toFixed(2)
+                    );
+                     //$("#myTable").on('input', '.txtCal', function () {
+                   var calculated_total_sum = 0;
+
+                   $(".items .total").each(function () {
+                       var get_qty_val = $(this).html();
+                       if ($.isNumeric(get_qty_val)) {
+                          calculated_total_sum += parseFloat(get_qty_val);
+                          }
+                        });
+                    $('.total-amt').html(calculated_total_sum.toFixed(2));
+                    var dis=0;
+                    //5% discount
+                    if(calculated_total_sum >= 8000 && calculated_total_sum<10000){
+                        dis=0.05;
+                        $('.input-discount').val(5);
+
+                    }
+                    //10% discount
+                    else if(calculated_total_sum >= 10000 && calculated_total_sum<=20000){
+                        dis = 0.1;
+                        $('.input-discount').val(10);
+                    }//15% discount
+                    else if(calculated_total_sum >20000){
+                        dis = 0.15;
+                        $('.input-discount').val(15);
+                    }//no discount
+                    else{
+                        dis = 0;
+                    }
+                    var discount_amt = calculated_total_sum*dis;
+                    $('.dis-val').html(discount_amt.toFixed(2));
+                    $('.g-total').html((calculated_total_sum - discount_amt).toFixed(2));
+
+               });
+
+             }
+           });
+        });
     }
+    getQty();
     var tr=1;
     function checkForNewRow(){
         $('.last').keyup(function(e){
@@ -601,10 +665,10 @@
                     '<input type="text" style="width:100%; border: none;" class="particular particular-'+tr+' bg-dark"/>'+
                 '</td>'+
                 '<td class="input-qty">'+
-                    '<input type="number" style=" width: 100px; border: none" id="'+tr+'" class="last qty bg-dark"/>'+
+                    '<input type="number" style=" width: 100px; border: none" id="'+tr+'" class="last qty bg-dark qty-'+tr+'"/>'+
                   '</td>'+
-                '<td class="text-right pr-5 input-price">0.00</td>'+
-                '<td class="text-right pr-5">0.00</td>'+
+                '<td class="text-right pr-5 input-price price price-'+tr+'">0.00</td>'+
+                '<td class="text-right pr-5 total total-'+tr+'">0.00</td>'+
             '</tr>'
         );
         bgColor();
@@ -612,6 +676,7 @@
         autocompleteProduct();
         var focusParticular = ".particular-"+tr;
         $(focusParticular).focus();
+        getQty();
    }
    $('.input-discount').blur(function(){
         $(this).addClass('bg-dark');

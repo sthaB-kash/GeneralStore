@@ -1,5 +1,6 @@
 import cv2
 import pyzbar.pyzbar as pyzbar
+import time
 
 
 def capture():

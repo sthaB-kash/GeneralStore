@@ -20,6 +20,10 @@ from django.shortcuts import get_object_or_404
 # prevent from accessing page without login
 from django.contrib.auth.decorators import login_required
 
+import cv2
+import numpy as np
+import pyzbar.pyzbar as pyzbar
+
 
 class ProductList(APIView):
 
@@ -205,15 +209,19 @@ def get_product_details(request):
     return JsonResponse(all_products, safe=False)
 
 
+def get_qty_and_price(request):
+    qs = Product.objects.values('pname', 'price', 'qty').get(pname=request.GET.get('product'))
+    # print(qs)
+    return JsonResponse(qs, safe=False)
+
+
 def qrcode_billing(request):
-    import cv2
-    import pyzbar.pyzbar as pyzbar
 
     def capture():
         cap = cv2.VideoCapture(0)
         font = cv2.FONT_HERSHEY_SIMPLEX
-        cap.set(3, 440)
-        cap.set(4, 380)
+        cap.set(3, 340)
+        cap.set(4, 280)
         while True:
             ret, frame = cap.read()
             decodedObj = pyzbar.decode(frame)
@@ -221,15 +229,18 @@ def qrcode_billing(request):
                 print("data:", obj.data.decode())
                 cv2.putText(frame, str(obj.data), (50, 50), font, 0.9, (255, 0, 0), 3, cv2.LINE_AA)
             if decodedObj:
+                return render(request, "qty.html")
                 break
-            cv2.imshow('frame', frame)
+            cv2.imshow('Billing-QR code', frame)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         cap.release()
         cv2.destroyAllWindows()
 
-    capture()
-    return render(request, 'qty.html')
+    try:
+        capture()
+    except ConnectionAbortedError:
+        pass
 
 
 def curd(request):
