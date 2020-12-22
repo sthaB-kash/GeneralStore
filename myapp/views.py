@@ -210,9 +210,12 @@ def get_product_details(request):
 
 
 def get_qty_and_price(request):
-    qs = Product.objects.values('pname', 'price', 'qty').get(pname=request.GET.get('product'))
-    # print(qs)
-    return JsonResponse(qs, safe=False)
+    try:
+        qs = Product.objects.values('pname', 'price', 'qty').get(pname=request.GET.get('product'))
+        # print(qs)
+        return JsonResponse(qs, safe=False)
+    except:
+        return JsonResponse({'false': 0}, safe=False)
 
 
 def qrcode_billing(request):

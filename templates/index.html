@@ -22,7 +22,7 @@
     <title>XYZ GeneralStore</title>
 
     <style>
-    .qty{text-align: right;}
+    .qty{text-align: right; padding-right: 10px;}
     </style>
 
   </head>
@@ -358,7 +358,11 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3" rowspan="3" class="text-left"><p>In words:</p></td>
+                                    <td colspan="3" rowspan="3" class="text-left">
+                                        <p><span class="text-muted">In words: </span>
+                                            <span id="amt-in-words">..</span> only.
+                                        </p>
+                                    </td>
                                     <td>Total Amount:</td><td class="text-right pr-5 total-amt">00.00</td>
                                 </tr>
                                 <tr><td>Discount(%)<input type="text" class="input-discount text-white bg-dark" placeholder="0"/></td>
@@ -367,7 +371,7 @@
                                 <tr><td colspan="5">Thank You!<br/>~~Visit Again~~</td></tr>
                             </tfoot>
                         </table>
-                        <div class="sold-by text-right text-muted"><p>SoldBy: UserName</p></div>
+                        <div class="sold-by text-right text-muted"><p>SoldBy: {{ request.user }}</p></div>
                     </div>
                 </div>
 
@@ -379,23 +383,23 @@
                 </div>
 
             <!--only for testing start -->
-            <input type="text" class="particular" />
-            <button id="showall">show all</button>
+<!--            <input type="text" class="particular" />-->
+<!--            <button id="showall">show all</button>-->
 
-            {% block billing-content %}{% endblock billing-content %}
-            <div class="fetch-info">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>name</th>
-                        <th>qty</th>
-                        <th>price</th>
-                    </tr>
-                    </thead>
-                    <tbody class="fetched-content"></tbody>
-                </table>
-            </div>
+<!--            {% block billing-content %}{% endblock billing-content %}-->
+<!--            <div class="fetch-info">-->
+<!--                <table>-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th>id</th>-->
+<!--                        <th>name</th>-->
+<!--                        <th>qty</th>-->
+<!--                        <th>price</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody class="fetched-content"></tbody>-->
+<!--                </table>-->
+<!--            </div>-->
             <!--only for testing end-->
 
 
@@ -480,7 +484,7 @@
 
     $('#inputSupplierName').change(function(){
         $.ajax({
-            url: '{% url 'auto_fill_supplier_info' %}',
+            url: '{% url "auto_fill_supplier_info" %}',
             type: 'get',
             data: { 'name': $(this).val()},
             success: function(response){
@@ -524,7 +528,7 @@
         xmlhttp.send();*/
 
         $.ajax({
-            url: '{% url 'search' %}',
+            url: '{% url "search" %}',
             type: 'get',
             data: { 'data': $(this).val()},
             success: function(response){
@@ -537,7 +541,7 @@
      $('.showDetails').click(function(){
         //alert($(this).parent().attr("id"));
         $.ajax({
-            url: '{% url 'showDetails' %}',
+            url: '{% url "showDetails" %}',
             type: 'get',
             data: { 'id': $(this).parent().attr("id")},
             success: function(response){
@@ -547,7 +551,7 @@
      });
 
     //------------------------dynamic billing------------------------------------------
-    //$('#billing-tab').tab('show');
+    $('#billing-tab').tab('show');
     $('#qrcode-billing').click(function(){
         $.ajax({
             url: '{% url "QrcodeBilling" %}',
@@ -569,6 +573,7 @@
     function getQty(){
         $('.particular').blur(function(){
            let id;
+           let me = $(this);
            var currentRow = $(this).closest("tr");
            $.ajax({
             url: '{% url "qty_and_price" %}',
@@ -576,53 +581,69 @@
             data : {'product' : $(this).val() },
             dataType: 'json',
             success: function(response){
-                //console.log(response);
-                id='.qty-'+1;
-                //$(id).val(response.qty);
-
-               currentRow.find(".qty").attr({
-                    "max": response.qty,
-                    "min": 0
-               });
-               currentRow.find(".price").html(response.price.toFixed(2)); // get current row 2nd table cell TD value
-               $(currentRow.find('.qty')).keyup(function(){
-                    currentRow.find('.total').html(
-                        ($(this).val()*response.price).toFixed(2)
-                    );
-                     //$("#myTable").on('input', '.txtCal', function () {
-                   var calculated_total_sum = 0;
-
-                   $(".items .total").each(function () {
-                       var get_qty_val = $(this).html();
-                       if ($.isNumeric(get_qty_val)) {
-                          calculated_total_sum += parseFloat(get_qty_val);
-                          }
-                        });
-                    $('.total-amt').html(calculated_total_sum.toFixed(2));
-                    var dis=0;
-                    //5% discount
-                    if(calculated_total_sum >= 8000 && calculated_total_sum<10000){
-                        dis=0.05;
-                        $('.input-discount').val(5);
-
+                console.log(response);
+                //console.log(me.val());
+                if(response.qty){
+                    me.css('border', 'none');
+                    id='.qty-'+1;
+                    //$(id).val(response.qty);
+                   currentRow.find(".qty").on('input', function(){
+                    var quantity = $(this).val();
+                    if((quantity !=='')&& (quantity.indexOf('.') === -1)){
+                        $(this).val(Math.max(Math.min(quantity, response.qty),1));
                     }
-                    //10% discount
-                    else if(calculated_total_sum >= 10000 && calculated_total_sum<=20000){
-                        dis = 0.1;
-                        $('.input-discount').val(10);
-                    }//15% discount
-                    else if(calculated_total_sum >20000){
-                        dis = 0.15;
-                        $('.input-discount').val(15);
-                    }//no discount
-                    else{
-                        dis = 0;
-                    }
-                    var discount_amt = calculated_total_sum*dis;
-                    $('.dis-val').html(discount_amt.toFixed(2));
-                    $('.g-total').html((calculated_total_sum - discount_amt).toFixed(2));
+                    console.log(Math.floor(Math.max(Math.min(quantity, response.qty),1)));
+                    $(this).val(Math.floor(Math.max(Math.min(quantity, response.qty),1)));
+                   });
+                   currentRow.find(".qty").attr({
+                        "max": response.qty,
+                        "min": 1
+                   });
+                   currentRow.find(".price").html(response.price.toFixed(2)); // get current row 2nd table cell TD value
+                   $(currentRow.find('.qty')).keyup(function(){
+                        currentRow.find('.total').html(
+                            ($(this).val()*response.price).toFixed(2)
+                        );
+                         //$("#myTable").on('input', '.txtCal', function () {
+                       var calculated_total_sum = 0;
 
-               });
+                       $(".items .total").each(function () {
+                           var get_qty_val = $(this).html();
+                           if ($.isNumeric(get_qty_val)) {
+                              calculated_total_sum += parseFloat(get_qty_val);
+                              }
+                            });
+                        $('.total-amt').html(calculated_total_sum.toFixed(2));
+                        var dis=0;
+                        //5% discount
+                        if(calculated_total_sum >= 8000 && calculated_total_sum<10000){
+                            dis=0.05;
+                            $('.input-discount').val(5);
+
+                        }
+                        //10% discount
+                        else if(calculated_total_sum >= 10000 && calculated_total_sum<=20000){
+                            dis = 0.1;
+                            $('.input-discount').val(10);
+                        }//15% discount
+                        else if(calculated_total_sum >20000){
+                            dis = 0.15;
+                            $('.input-discount').val(15);
+                        }//no discount
+                        else{
+                            dis = 0;
+                        }
+                        var discount_amt = calculated_total_sum*dis;
+                        $('.dis-val').html(discount_amt.toFixed(2));
+                        $('.g-total').html((calculated_total_sum - discount_amt).toFixed(2));
+                        $('#amt-in-words').html(amountInWords());
+                   });
+
+                }else{
+                    console.log("not found");
+                    me.css('border', '2px solid red');
+                    //console.log(me.val());
+                }
 
              }
            });
@@ -691,6 +712,7 @@
 
   </script>
   <script src="{% static 'js/index.js' %}" ></script>
+  <script src ="{% static 'js/billing-numberToWords.js' %}">/</script>
   <script src="{% static 'js/calTotalPrice.js' %}" ></script>
 
   </body>
