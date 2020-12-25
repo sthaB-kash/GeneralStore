@@ -69,7 +69,7 @@ def login_page(request):
     return render(request, "login.html", context)
 
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def index(request):
     try:
         all_products = Product.objects.all()
@@ -198,9 +198,12 @@ def suppliers(request):
 
 
 def auto_fill_supplier_info(request):
-    qs = Supplier.objects.values().get(sname=request.GET.get('name'))
-    # print(qs)
-    return JsonResponse(qs, safe=False)
+    try:
+        qs = Supplier.objects.values().get(sname=request.GET.get('name'))
+        # print(qs)
+        return JsonResponse(qs, safe=False)
+    except:
+        return JsonResponse({}, safe=False)
 
 
 def get_product_details(request):

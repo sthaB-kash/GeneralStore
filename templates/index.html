@@ -4,6 +4,7 @@
       {% load static %}
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/style_for_no_of_products_suppliers_and_customers.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/billing.css' %}"/>
 
     <!-- Required meta tags -->
@@ -38,7 +39,7 @@
                 </li>
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="newItem-tab" data-toggle="tab" href="#newItem" role="tab" aria-controls="newItem" aria-selected="true">New Item</a>
-                  </li>
+                </li>
                 <li class="nav-item" role="presentation">
                   <a class="nav-link" id="billing-tab" data-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
                 </li>
@@ -53,15 +54,15 @@
                 </li>
             </ul>
 
-          <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              More
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="#">Import</a>
-              <a class="dropdown-item" href="#">Export</a>
-              <a class="dropdown-item" href="#">Logout</a>
-            </div>
+<!--          <div class="nav-item dropdown">-->
+<!--            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--              More-->
+<!--            </a>-->
+<!--            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
+<!--              <a class="dropdown-item" href="#">Import</a>-->
+<!--              <a class="dropdown-item" href="#">Export</a>-->
+<!--              <a class="dropdown-item" href="#">Logout</a>-->
+<!--            </div>-->
           </div>
 
         </div>
@@ -101,6 +102,35 @@
       <div class="tab-content" id="myTabContent">
           <!--products tab-->
         <div class="tab-pane fade active show" id="products" role="tabpanel" aria-labelledby="products-tab">
+            <!-- no of products, suppliers and customers -->
+                <section class="">
+                    <div class="container product-supplier-customer py-5">
+                        <div class="row row-cols-md-3">
+                            <div class="card">
+                                <span></span>
+                                <img class="card-img-top" src="{% static 'images/project-products.jpg'%}" />
+                                <div class="card-value p-value">457</div>
+                                <p class="">Products</p>
+                            </div>
+
+                            <div class="card">
+                                <span></span>
+                                <img class="card-img-top" src="{% static 'images/project-customer-purchase.jpg' %}"/>
+                                <div class="card-value c-value">457</div>
+                                <p class="">Customers</p>
+                            </div>
+                            <div class="card">
+                                <span></span>
+                                <img class="card-img-top" src="{% static 'images/supplier-4.jpg' %}"/>
+                                <div class="card-value s-value">457</div>
+                                <p class="">Suppliers</p>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
             <!--all product details-->
             <div class="container">
                 <div class=" my-4 p-2 row ">
@@ -108,7 +138,6 @@
                            id="inputSearch" placeholder="Enter product name/code/supplier/category" aria-label="Search" />
                     <!--<button class="col-sm-6 col-md-3 col-lg-2 btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
                 </div>
-
 
                 <div id="searched-data"><!--searched data will be placed after ajax response-->
                     <p class = "display-5">Product Details: <span class="text-primary">({{ sn }})</span></p>
@@ -551,7 +580,7 @@
      });
 
     //------------------------dynamic billing------------------------------------------
-    $('#billing-tab').tab('show');
+    //$('#billing-tab').tab('show');
     $('#qrcode-billing').click(function(){
         $.ajax({
             url: '{% url "QrcodeBilling" %}',
@@ -712,6 +741,7 @@
 
   </script>
   <script src="{% static 'js/index.js' %}" ></script>
+  <script src="{% static 'js/product-supplier-customers.js' %}" ></script>
   <script src ="{% static 'js/billing-numberToWords.js' %}">/</script>
   <script src="{% static 'js/calTotalPrice.js' %}" ></script>
 

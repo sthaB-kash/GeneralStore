@@ -1,0 +1,39 @@
+ .product-supplier-customer  .card {
+    max-height: 200px;
+ }
+ .product-supplier-customer .card > p,  .product-supplier-customer .card>.card-value {
+    /* background-color: lightblue; */
+    color: rgb(47, 243, 47);
+    position: absolute;
+    width: 100%;
+    bottom: 5px;
+    text-align: center !important;
+    font-size: 2.8rem;
+}
+ .product-supplier-customer .card>.card-value{
+    color: white;
+    font-size: 4.5em;
+    top:30%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+ .product-supplier-customer .card > span {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(12, 12, 12, 0.5);
+    /* opacity: 0.5; */
+}
+ .product-supplier-customer .card img{
+    width: 100% !important;
+    height: 100% !important;
+}
+@media screen and (min-width:768px) and (max-width:992px){
+     .product-supplier-customer .card > p{
+        font-size: 1.8rem;
+        bottom: 0;
+    }
+     .product-supplier-customer .card >.card-value {
+        font-size: 3.7rem
+    }
+}
