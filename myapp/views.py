@@ -10,6 +10,7 @@ import json
 from django.contrib.auth.forms import UserCreationForm
 from .forms import CreateUserForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
 from .serializer import ProductSerializer
 from rest_framework import status
@@ -61,12 +62,24 @@ def login_page(request):
         if user is not None:
             login(request, user)
             # print(user)
+            request.session['user_id'] = user.id
+            request.session['user_email'] = user.email
             return redirect('/')
         else:
             messages.info(request, "Username or  Password is invalid")
 
     context = {}
     return render(request, "login.html", context)
+
+
+def logout_user(request):
+    logout(request)
+    try:
+        del request.session['user_id']
+        del request.session['user_email']
+    except KeyError:
+        pass
+    return redirect('login')
 
 
 @login_required(login_url='login')
@@ -247,6 +260,10 @@ def qrcode_billing(request):
         capture()
     except ConnectionAbortedError:
         pass
+
+
+def make_bill(request):
+    return JsonResponse({'success': True}, safe=False)
 
 
 def curd(request):

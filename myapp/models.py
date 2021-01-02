@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.db import connections
 
 import qrcode
@@ -66,6 +67,38 @@ class Billing(models.Model):
 
     def __str__(self):
         return self.cname
+
+
+class Customer(models.Model):
+    name = models.CharField(max_length=50)
+    address = models.CharField(max_length=50)
+    contact = models.CharField(max_length=10)
+
+    class Meta:
+        db_table = "customers"
+
+    def __str__(self):
+        return self.name
+
+
+class Bill(models.Model):
+    date = models.DateTimeField(auto_now_add=True)
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=15, decimal_places=2)
+    discount = models.IntegerField()
+    paid_amount = models.DecimalField(max_digits=15, decimal_places=2)
+    sold_by = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = "bills"
+
+
+class Particulars(models.Model):
+    bill_no = models.ForeignKey(Bill, on_delete=models.CASCADE)
+    purchase_items = models.JSONField()
+
+    class Meta:
+        db_table = "particulars"
 
 
 class Students(models.Model):
