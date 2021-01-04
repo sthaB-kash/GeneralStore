@@ -37,3 +37,8 @@
             text-align: center;
             width: 36px !important;
         }
+@media print {
+    #qrcode-billing, #print-btn {
+        display: none;
+    }
+}

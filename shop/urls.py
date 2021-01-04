@@ -42,6 +42,7 @@ urlpatterns = [
     path("product/", views.products, name='products'),
     path("suppliers/", views.suppliers, name='suppliers'),
     path("billing/", views.make_bill, name="billing"),
+    path("deduct_qty", views.deduct_qty, name="deduct-qty"),
     path("billing-qrcode/", views.qrcode_billing, name="QrcodeBilling"),
     path("qty-price/", views.get_qty_and_price, name="qty_and_price"),
     path("get_supplier_info/", views.auto_fill_supplier_info, name="auto_fill_supplier_info"),

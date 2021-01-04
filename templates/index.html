@@ -5,7 +5,7 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/style_for_no_of_products_suppliers_and_customers.css' %}"/>
-    <link rel="stylesheet" href="{% static 'css/billing.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/billing.css' %}?{% now 'U' %}"/>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -408,7 +408,8 @@
                 <div id="qty-qrcode"></div>
                 <!--print button-->
                 <div style="width:50%; margin: 50px auto;">
-                    <button class="btn  btn-outline-success " style="width:100%;">Print</button>
+                    {% csrf_token %}
+                    <button id="print-btn" class="btn  btn-outline-success print-btn" style="width:100%;">Print</button>
                 </div>
 
             <!--only for testing start -->
@@ -580,7 +581,7 @@
      });
 
     //------------------------dynamic billing------------------------------------------
-    //$('#billing-tab').tab('show');
+    $('#billing-tab').tab('show');
     $('#qrcode-billing').click(function(){
         $.ajax({
             url: '{% url "QrcodeBilling" %}',
@@ -641,7 +642,7 @@
                            if ($.isNumeric(get_qty_val)) {
                               calculated_total_sum += parseFloat(get_qty_val);
                               }
-                            });
+                        });
                         $('.total-amt').html(calculated_total_sum.toFixed(2));
                         var dis=0;
                         //5% discount
@@ -737,7 +738,82 @@
         $(this).removeClass('text-white');
    });
    //--------------dynamic billing end --------------------------
+
+   //-------------- bill date&time ---script start---------------
+
+   setInterval(function(){
+        datetime = new Date();
+        $('.bill-datetime').html(datetime.toLocaleString());
+        //console.log(datetime.toLocaleString());
+   },999);
+   //---------------end bill date&time-----------
+
+   //--------------print bill -----------------------------------
+   $('.print-btn').click(printContent);
+   function printContent(){
+    window.print();
+    deductQty();
+   }
+   function deductQty(){
+        var token = $('input[name=csrfmiddlewaretoken]').val();
+        var bill = makeBill();
+        //console.log(bill);
+        bill = JSON.stringify(bill);
+        $.ajax({
+            url: '{% url 'deduct-qty' %}',
+            type: 'post',
+            data: {'bill': bill, 'csrfmiddlewaretoken': token},
+            dataType: 'json',
+            success: function(response){
+                console.log(response);
+            }
+        });
+
+        //alert("deduct");
+   }
+
+   function makeBill(){
+    name = $('#customer-info').val();
+    address = $('#customer-address').val();
+    contact = $('#customer-contact').val();
+    date_time = $('.bill-datetime').html();
+    var items=[];
+    $('.items tr').each(
+    function (){
+        item = $(this).find('.particular').val();
+        qty = $(this).find('.qty').val();
+        price = $(this).find('.price').val();
+        total = $(this).find('.total').html();
+        item1 ={
+            item: item,
+            qty: qty,
+            price: price,
+            total: total
+        }
+        items.push(item1);
+    });
+    amt_in_words = $('#amt-in-words').html();
+    total_amt = $('.total-amt').html();
+    discount = $('.dis-val').html();
+    grantTotal = $('.g-total').html();
+    sold_by = $('.sold-by p').html();
+    bill = {
+        name : name,address: address,contact:contact,date:date_time,
+        particulars : items,
+        total_amt : total_amt,
+        discount: discount,
+        grant_total: grantTotal,
+        amt_in_words: amt_in_words,
+        sold_by: sold_by
+    };
+
+    return bill;
+  }
+
+   //---------------print bill end ----------------------------
   });
+
+
 
   </script>
   <script src="{% static 'js/index.js' %}" ></script>

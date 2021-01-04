@@ -186,6 +186,16 @@ def delete_product(request, pid):
     return redirect('/')
 
 
+def deduct_qty(request):
+    bill = json.loads(request.POST.get('bill'))
+    print(bill)
+    print(type(bill))
+    for item in bill['particulars']:
+        print(item)
+        print(type(item))
+    return JsonResponse({'value': request.POST.get('csrfmiddlewaretoken')}, safe=False)
+
+
 def products(request):
     # if 'value' in request.GET:
     print(request.GET.get("term"))
