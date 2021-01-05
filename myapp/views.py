@@ -193,7 +193,31 @@ def deduct_qty(request):
     for item in bill['particulars']:
         print(item)
         print(type(item))
-    return JsonResponse({'value': request.POST.get('csrfmiddlewaretoken')}, safe=False)
+    success = False
+    try:
+        # customer's details
+        name = bill['name']
+        address = bill['address']
+        contact= bill['contact']
+        # c1 = Customer(name=)
+        print(f"customer--> name:{name}, {address}, {contact}")
+
+        #bill details
+        amount = bill['total_amt']
+        discount = bill['discount']
+        paid_amount = bill['grant_total']
+        sold_by = bill['sold_by']
+        print(f"bill-->{amount} {discount} {paid_amount} {sold_by}")
+
+        # particulars
+        items = bill['particulars']
+        print(items)
+        print(items[0]['item'])
+        success = True
+    except:
+        pass
+    # return JsonResponse({'value': request.POST.get('csrfmiddlewaretoken')}, safe=False)
+    return JsonResponse({'success': success})
 
 
 def products(request):

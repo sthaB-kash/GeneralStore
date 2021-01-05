@@ -400,7 +400,7 @@
                                 <tr><td colspan="5">Thank You!<br/>~~Visit Again~~</td></tr>
                             </tfoot>
                         </table>
-                        <div class="sold-by text-right text-muted"><p>SoldBy: {{ request.user }}</p></div>
+                        <div class="sold-by text-right text-muted"><p>SoldBy: <span id="sold-by">{{ request.user }}</span></p></div>
                     </div>
                 </div>
 
@@ -782,7 +782,7 @@
     function (){
         item = $(this).find('.particular').val();
         qty = $(this).find('.qty').val();
-        price = $(this).find('.price').val();
+        price = $(this).find('.price').html();
         total = $(this).find('.total').html();
         item1 ={
             item: item,
@@ -796,7 +796,7 @@
     total_amt = $('.total-amt').html();
     discount = $('.dis-val').html();
     grantTotal = $('.g-total').html();
-    sold_by = $('.sold-by p').html();
+    sold_by = $('#sold-by').html();
     bill = {
         name : name,address: address,contact:contact,date:date_time,
         particulars : items,

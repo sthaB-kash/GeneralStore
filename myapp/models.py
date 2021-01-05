@@ -92,13 +92,19 @@ class Bill(models.Model):
     class Meta:
         db_table = "bills"
 
+    def __str__(self):
+        return str(self.date) + " " + self.customer.name
+
 
 class Particulars(models.Model):
-    bill_no = models.ForeignKey(Bill, on_delete=models.CASCADE)
+    bill = models.ForeignKey(Bill, on_delete=models.CASCADE)
     purchase_items = models.JSONField()
 
     class Meta:
         db_table = "particulars"
+
+    def __str__(self):
+        return str(self.bill.id)
 
 
 class Students(models.Model):
