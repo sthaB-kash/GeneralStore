@@ -23,7 +23,6 @@
     <title>XYZ GeneralStore</title>
 
     <style>
-    .qty{text-align: right; padding-right: 10px;}
     </style>
 
   </head>
@@ -379,10 +378,10 @@
                                 <tr>
                                     <td>1.</td>
                                     <td class="text-left input-particulars">
-                                        <input type="text" style="width:100%; border: none" class="particular particular-1"/>
+                                        <input type="text" style="width:100%; border: none" class="particular particular-1"/><span></span>
                                     </td>
                                     <td class="input-qty">
-                                        <input type="number" style=" width: 100px; border: none" id="1" class="last qty qty-1"/>
+                                        <input type="number" style=" width: 100px; border: none" id="1" class="last qty qty-1"/><span></span>
                                      </td>
                                     <td class="text-right pr-5 input-price price price-1">0.00</td>
                                     <td class="text-right pr-5 total total-1">0.00</td>
@@ -603,6 +602,15 @@
         });
     }
     autocompleteProduct();
+    $('.input-discount').keyup(function(){
+        let dis_amt = $(this).val();
+        $(this).css('color', '#000');
+        if(Number(dis_amt)>0 && Number(dis_amt)<=100){
+            $(this).val(dis_amt);
+        }else{
+            $(this).val('');
+        }
+    });
     function getQty(){
         $('.particular').blur(function(){
            let id;
@@ -719,10 +727,10 @@
                 '<td>'+tr+'.</td>'+
                 '<td class="text-left input-particulars">'+
                     '<input type="text" style="width:100%; border: none;" class="particular particular-'+tr+' bg-dark"/>'+
-                '</td>'+
+                '<span></span></td>'+
                 '<td class="input-qty">'+
                     '<input type="number" style=" width: 100px; border: none" id="'+tr+'" class="last qty bg-dark qty-'+tr+'"/>'+
-                  '</td>'+
+                  '<span></span></td>'+
                 '<td class="text-right pr-5 input-price price price-'+tr+'">0.00</td>'+
                 '<td class="text-right pr-5 total total-'+tr+'">0.00</td>'+
             '</tr>'
@@ -799,13 +807,29 @@
             alert("Please enter the name of the customer.")
             $('#customer-name').focus();
         }else if(item.value.length == 0){
-            alert("<h1>EMPTY BILL</h1>\nPlease enter an item for billing");
+            alert("EMPTY BILL\nPlease enter an item for billing");
             item.focus();
        }else if(!PRINT){
             alert("incorrect details...");
        }else{
+           $('.particular').each(function(){
+                $(this).closest('td').find('span').text($(this).val());
+                $(this).css('display', 'none');
+           });
+           $('.qty').each(function(){
+                $(this).closest('td').find('span').text($(this).val());
+                $(this).css('display', 'none');
+           });
             window.print();
             deductQty();
+            $('.particular').each(function(){
+                $(this).closest('td').find('span').text('');
+                $(this).css('display', 'inline-block');
+            });
+            $('.qty').each(function(){
+                $(this).closest('td').find('span').text('');
+                $(this).css('display', 'inline-block');
+            });
         }
    }
 

@@ -32,6 +32,10 @@
             width: 19%;
 
         }
+        .qty {
+            text-align: right;
+            padding-right: 10px;
+        }
         .input-discount {
             color: #fff;
             text-align: center;
@@ -40,5 +44,10 @@
 @media print {
     #qrcode-billing, #print-btn {
         display: none;
+    }
+    input, .particular, .qty {
+        color: #000 !important;
+        background-color: #00f !important;
+        /*font-size: 30px;*/
     }
 }
