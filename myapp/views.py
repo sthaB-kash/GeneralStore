@@ -163,7 +163,7 @@ def update_product(request, pid):
     product.pid = request.POST.get("inputId")
     product.pname = request.POST.get("inputName")
     product.qty = request.POST.get("inputQty")
-    product.category = request.POST.get("inputCategory")
+    product.category =  request.POST.get("inputCategory")
     product.mfd = request.POST.get("inputMfd")
     product.exp = request.POST.get("inputDexp")
     product.price = request.POST.get("inputPrice")

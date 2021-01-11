@@ -350,8 +350,8 @@
                         </div>
                         <div class="customer-info  text-left ">
                             <div class="customerName ">
-                                <label for="customer-info">Name:</label>
-                                <input type="text" placeholder="Customer's Name" id="customer-info" name="customer-info" />
+                                <label for="customer-name">Name:</label>
+                                <input type="text" placeholder="Customer's Name" id="customer-name" name="customer-name" />
                             </div>
                             <label class="bill-datetime text-right my-1" style="width:40%;display:inline-block;">Nov 29, 2020 12:32:45 PM</label>
 
@@ -365,6 +365,9 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--for displaying error -->
+                    <div class="error" style="color:red;font-size:13px"></div>
                     <div class="purchase-item-details card-body" >
                         <table class='table text-center table-dark'>
                             <thead>
@@ -668,10 +671,12 @@
                         $('.g-total').html((calculated_total_sum - discount_amt).toFixed(2));
                         $('#amt-in-words').html(amountInWords());
                    });
+                   PRINT = 1;
 
                 }else{
                     console.log("not found");
                     me.css('border', '2px solid red');
+                    PRINT = 0;
                     //console.log(me.val());
                 }
 
@@ -749,11 +754,61 @@
    //---------------end bill date&time-----------
 
    //--------------print bill -----------------------------------
-   $('.print-btn').click(printContent);
-   function printContent(){
-    window.print();
-    deductQty();
+   $('#customer-name').on('input', function(){
+        const namePattern = /^[ a-zA-Z.]+$/;
+        let name = $(this).val().trim();
+        if(name.length)
+            testCustomerInfo(namePattern, name, "name", this);
+   });
+   $('#customer-address').on('blur', function(){
+        const addressPattern = /^[a-zA-Z0-9 -,]{2,50}$/;
+        let address = $(this).val().trim();
+        if(address.length>0)
+            testCustomerInfo(addressPattern, address, "address", this);
+        else
+            $('.error').text("");
+   });
+   $('#customer-contact').on('blur', function(){
+        const contactPattern = /^[0-9]{10}$/;
+        let contact = $(this).val().trim();
+        if(contact.length>0)
+            testCustomerInfo(contactPattern, contact, "contact", this);
+        else
+            $('.error').text("");
+   });
+
+   function testCustomerInfo(pattern, fieldName, errorMsg, field){
+        if(!pattern.test(fieldName)){
+            errorMsg = 'invalid ' + errorMsg;
+            $('.error').text(errorMsg);
+            $(field).css('color', 'red');
+            $(field).focus();
+            PRINT = 0;
+        }else{
+            $('.error').text('');
+            $(field).css('color', '#000');
+        }
    }
+
+   var PRINT = 0;
+   $('.print-btn').click(printContent);
+
+   function printContent(){
+        var item = document.querySelector('.particular');
+        if($('#customer-name').val().length == 0){
+            alert("Please enter the name of the customer.")
+            $('#customer-name').focus();
+        }else if(item.value.length == 0){
+            alert("<h1>EMPTY BILL</h1>\nPlease enter an item for billing");
+            item.focus();
+       }else if(!PRINT){
+            alert("incorrect details...");
+       }else{
+            window.print();
+            deductQty();
+        }
+   }
+
    function deductQty(){
         var token = $('input[name=csrfmiddlewaretoken]').val();
         var bill = makeBill();
@@ -773,7 +828,7 @@
    }
 
    function makeBill(){
-    name = $('#customer-info').val();
+    name = $('#customer-name').val();
     address = $('#customer-address').val();
     contact = $('#customer-contact').val();
     date_time = $('.bill-datetime').html();
