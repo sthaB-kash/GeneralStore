@@ -603,10 +603,14 @@
     }
     autocompleteProduct();
     $('.input-discount').keyup(function(){
-        let dis_amt = $(this).val();
+        let dis_percent = $(this).val();
         $(this).css('color', '#000');
-        if(Number(dis_amt)>0 && Number(dis_amt)<=100){
-            $(this).val(dis_amt);
+        if(Number(dis_percent)>0 && Number(dis_percent)<=100){
+            $(this).val(dis_percent);
+            var discount_amt = $('.total-amt').html()*(Number(dis_percent)/100);
+            $('.dis-val').html(discount_amt.toFixed(2));
+            $('.g-total').html((Number($('.total-amt').html()) - discount_amt.toFixed(2)).toFixed(2));
+            $('#amt-in-words').html(amountInWords());
         }else{
             $(this).val('');
         }
