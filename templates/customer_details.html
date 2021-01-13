@@ -1,0 +1,18 @@
+<div class="container">
+    <table class="table table-bordered table-hover table-striped table-sm">
+        <thead>
+            <th>S.N</th><th>Customer's Name</th><th>Amount</th><th>Date</th><th>Sold-By</th>
+        </thead>
+        <tbody>
+        {% for customer in customers %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{customer.customer.name}}</td>
+                <td>{{ customer.amount }}</td>
+                <td>{{ customer.date }}</td>
+                <td>{{ customer.sold_by.username }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

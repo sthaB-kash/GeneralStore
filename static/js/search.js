@@ -8,7 +8,7 @@ $('#inputSearch').keyup(function(){
         xmlhttp.send();*/
 
         $.ajax({
-            url: '{% url "search" %}',
+            url: '/search/',
             type: 'get',
             data: { 'data': $(this).val()},
             success: function(response){

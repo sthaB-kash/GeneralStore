@@ -47,6 +47,7 @@ urlpatterns = [
     path("qty-price/", views.get_qty_and_price, name="qty_and_price"),
     path("get_supplier_info/", views.auto_fill_supplier_info, name="auto_fill_supplier_info"),
     path("get_product_details/", views.get_product_details, name="get_product_details"),
+    path("customer_details/", views.customer_details, name="customer_details"),
     path("curd/", views.curd, name="curd"),
     path("add/", views.add, name="add"),
     path("insert/", views.insert, name="insert"),

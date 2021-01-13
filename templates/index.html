@@ -158,6 +158,7 @@
                         </thead>
                         <tbody class="table-data">
                         {% for product in products %}
+
                             <tr id="{{ product.id }}">
                                 <td class="text-center showDetails">{{ forloop.counter }}.</td>
                                 <td class=" showDetails">{{ product.pid }}</td>
@@ -173,7 +174,7 @@
                                     {% if product.qty > 0 %}
                                         <small class="well well-small ">in-stock</small>
                                     {% else %}
-                                        <small>out-of-stock</small>
+                                        <small style="background: red">out-of-stock</small>
                                     {% endif %}
                                         <span class="btn btn-dark p-1 rounded-circle" id="stock-value">{{ product.qty }}</span>
                                     </span>
@@ -478,7 +479,8 @@
         </div>
         <!--customer tab-->
         <div class="tab-pane fade" id="customers" role="tabpanel" aria-labelledby="customers-tab">
-            <p class="display-1">my customers</p>
+<!--            <p class="display-3">my customers</p>-->
+            <div id="customer-details" class="pt-5"></div>
         </div>
         <!--reports tab-->
         <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
@@ -549,25 +551,6 @@
             }
         });
     });
-
-    $('#inputSearch').keyup(function(){
-        //alert($(this).val());
-        /*var xmlhttp = new XMLHTTPRequest();
-        xmlhttp.onreadystatechange = function(){
-            document.getElementById('searched-data').innerHTML = xmlhttp.responseText;
-        }
-        xmlhttp.open('GET', 'search?data='+$(this).val(), true)
-        xmlhttp.send();*/
-
-        $.ajax({
-            url: '{% url "search" %}',
-            type: 'get',
-            data: { 'data': $(this).val()},
-            success: function(response){
-                $('#searched-data').html(response);
-            }
-        });
-     });
 
      //show when respective row clicked
      $('.showDetails').click(function(){
@@ -773,7 +756,7 @@
             testCustomerInfo(namePattern, name, "name", this);
    });
    $('#customer-address').on('blur', function(){
-        const addressPattern = /^[a-zA-Z0-9 -,]{2,50}$/;
+        const addressPattern = /^[a-zA-Z0-9 .,-]{2,50}$/;
         let address = $(this).val().trim();
         if(address.length>0)
             testCustomerInfo(addressPattern, address, "address", this);
@@ -795,6 +778,7 @@
             $('.error').text(errorMsg);
             $(field).css('color', 'red');
             $(field).focus();
+            console.log(pattern);
             PRINT = 0;
         }else{
             $('.error').text('');
@@ -848,7 +832,11 @@
             data: {'bill': bill, 'csrfmiddlewaretoken': token},
             dataType: 'json',
             success: function(response){
-                console.log(response);
+                console.log(response.success);
+                if(response.success)
+                    alert('clear');
+                else
+                    alert('error');
             }
         });
 
@@ -877,7 +865,9 @@
     });
     amt_in_words = $('#amt-in-words').html();
     total_amt = $('.total-amt').html();
-    discount = $('.dis-val').html();
+    discount = Number($('.input-discount').val());
+    if(!discount)
+        discount = 0;
     grantTotal = $('.g-total').html();
     sold_by = $('#sold-by').html();
     bill = {
@@ -894,15 +884,18 @@
   }
 
    //---------------print bill end ----------------------------
+
   });
 
 
 
   </script>
   <script src="{% static 'js/index.js' %}" ></script>
+  <script src="{% static 'js/search.js' %}"></script>
   <script src="{% static 'js/product-supplier-customers.js' %}" ></script>
   <script src ="{% static 'js/billing-numberToWords.js' %}">/</script>
   <script src="{% static 'js/calTotalPrice.js' %}" ></script>
+  <script src="{% static 'js/customers.js' %}"></script>
 
   </body>
 </html>

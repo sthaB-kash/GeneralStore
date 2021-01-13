@@ -2,7 +2,7 @@
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from .models import Product, Supplier, Students
+from .models import Product, Supplier, Students, Customer, Bill, Particulars
 from django.contrib import messages
 from django.db.models import Q
 import json
@@ -89,7 +89,9 @@ def index(request):
         all_suppliers = Supplier.objects.all()
         no_of_suppliers = all_suppliers.count()
         sn = all_products.count()
-        return render(request, "index.html", {'products': all_products, 'sn': sn, 'suppliers': all_suppliers, 'no_of_suppliers': no_of_suppliers})
+        # customers = Bill.objects.all()
+        return render(request, "index.html", {'products': all_products, 'sn': sn, 'suppliers': all_suppliers,
+                                              'no_of_suppliers': no_of_suppliers })
     except:
         return render(request, "index.html")
 
@@ -188,36 +190,49 @@ def delete_product(request, pid):
 
 def deduct_qty(request):
     bill = json.loads(request.POST.get('bill'))
-    print(bill)
-    print(type(bill))
-    for item in bill['particulars']:
-        print(item)
-        print(type(item))
+    # print(bill)
+    # print(type(bill))
+    # for item in bill['particulars']:
+    #     print(item)
+    #     print(type(item))
     success = False
     try:
         # customer's details
         name = bill['name']
         address = bill['address']
-        contact= bill['contact']
-        # c1 = Customer(name=)
-        print(f"customer--> name:{name}, {address}, {contact}")
+        contact = bill['contact']
+        c1 = Customer(name=name, address=address, contact=contact)
+        # print(f"customer--> name:{name}, address:{address}, contact:{contact}")
+        c1.save()
 
-        #bill details
+        # bill details
         amount = bill['total_amt']
         discount = bill['discount']
         paid_amount = bill['grant_total']
         sold_by = bill['sold_by']
-        print(f"bill-->{amount} {discount} {paid_amount} {sold_by}")
+        # print(f"bill-->{amount} {discount} {paid_amount} {sold_by}")
+        b1 = Bill(customer=c1, amount=amount, discount=discount, paid_amount=paid_amount, sold_by=User.objects.get(username=sold_by))
+        b1.save()
+        print(b1)
 
         # particulars
         items = bill['particulars']
-        print(items)
-        print(items[0]['item'])
+        # print(items)
+        # print(items[0]['item'])
+        p1 = Particulars(bill=b1, purchase_items=items)
+        p1.save()
+
+        # deduct qty of sold product
+        for product in bill['particulars']:
+            sold_product = Product.objects.get(pname=product['item'])
+            sold_product.qty = sold_product.qty - product['qty']
+
+
         success = True
     except:
         pass
     # return JsonResponse({'value': request.POST.get('csrfmiddlewaretoken')}, safe=False)
-    return JsonResponse({'success': success})
+    return JsonResponse({'success': success}, safe=False)
 
 
 def products(request):
@@ -298,6 +313,11 @@ def qrcode_billing(request):
 
 def make_bill(request):
     return JsonResponse({'success': True}, safe=False)
+
+
+def customer_details(request):
+    customers = Bill.objects.all()
+    return render(request, "customer_details.html", {'customers': customers})
 
 
 def curd(request):
