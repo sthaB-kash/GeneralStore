@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
       {% load static %}
@@ -552,21 +552,10 @@
         });
     });
 
-     //show when respective row clicked
-     $('.showDetails').click(function(){
-        //alert($(this).parent().attr("id"));
-        $.ajax({
-            url: '{% url "showDetails" %}',
-            type: 'get',
-            data: { 'id': $(this).parent().attr("id")},
-            success: function(response){
-                $('#show-selected-product').html(response);
-            }
-        });
-     });
+
 
     //------------------------dynamic billing------------------------------------------
-    $('#billing-tab').tab('show');
+    //$('#billing-tab').tab('show');
     $('#qrcode-billing').click(function(){
         $.ajax({
             url: '{% url "QrcodeBilling" %}',
@@ -892,10 +881,11 @@
   </script>
   <script src="{% static 'js/index.js' %}" ></script>
   <script src="{% static 'js/search.js' %}"></script>
-  <script src="{% static 'js/product-supplier-customers.js' %}" ></script>
+  <script src="{% static 'js/product-supplier-customers.js' %}?{% now 'U' %}" ></script>
   <script src ="{% static 'js/billing-numberToWords.js' %}">/</script>
   <script src="{% static 'js/calTotalPrice.js' %}" ></script>
   <script src="{% static 'js/customers.js' %}"></script>
+  <script src="{% static 'js/get_all_product_details.js' %}?{% now 'U' %}"></script>
 
   </body>
 </html>

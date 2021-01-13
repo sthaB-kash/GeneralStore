@@ -213,7 +213,7 @@ def deduct_qty(request):
         # print(f"bill-->{amount} {discount} {paid_amount} {sold_by}")
         b1 = Bill(customer=c1, amount=amount, discount=discount, paid_amount=paid_amount, sold_by=User.objects.get(username=sold_by))
         b1.save()
-        print(b1)
+        # print(b1)
 
         # particulars
         items = bill['particulars']
@@ -225,14 +225,19 @@ def deduct_qty(request):
         # deduct qty of sold product
         for product in bill['particulars']:
             sold_product = Product.objects.get(pname=product['item'])
-            sold_product.qty = sold_product.qty - product['qty']
-
-
+            sold_product.qty = sold_product.qty - int(product['qty'])
+            sold_product.save()
         success = True
     except:
         pass
     # return JsonResponse({'value': request.POST.get('csrfmiddlewaretoken')}, safe=False)
     return JsonResponse({'success': success}, safe=False)
+
+
+def updated_products(request):
+    prod = Product.objects.all()
+    print(prod)
+    return render(request, "all_products.html", {'products': prod})
 
 
 def products(request):

@@ -54,5 +54,30 @@
 
     dynamicValues();
     $('#products-tab').click(function(){
+        updatedProducts();
         dynamicValues();
-    })
+    });
+
+    function updatedProducts(){
+        $.ajax({
+            url: '/updated_products/',
+            type: 'get',
+            data: {},
+            success: function(response){
+                $('.table-data').html(response);
+            }
+        });
+    }
+
+//show when respective row clicked
+     $('.showDetails').click(function(){
+        //alert($(this).parent().attr("id"));
+        $.ajax({
+            url: '/showDetails/',//'{% url "showDetails" %}',
+            type: 'get',
+            data: { 'id': $(this).parent().attr("id")},
+            success: function(response){
+                $('#show-selected-product').html(response);
+            }
+        });
+     });
