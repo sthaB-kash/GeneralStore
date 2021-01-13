@@ -165,17 +165,20 @@ def update_product(request, pid):
     product.pid = request.POST.get("inputId")
     product.pname = request.POST.get("inputName")
     product.qty = request.POST.get("inputQty")
-    product.category =  request.POST.get("inputCategory")
+    product.category = request.POST.get("inputCategory")
     product.mfd = request.POST.get("inputMfd")
     product.exp = request.POST.get("inputDexp")
     product.price = request.POST.get("inputPrice")
     product.total_price = float(request.POST.get("inputQty")) * float(request.POST.get("inputPrice"))
 
-    if int(request.POST.get("noSupplier")) != 0:
-        product.supplier.sname = request.POST.get("inputSupplierName")
-        product.supplier.email = request.POST.get("inputEmail")
-        product.supplier.contact = request.POST.get("inputContact")
-        product.supplier.address = request.POST.get("inputAddress")
+    try:
+        if int(request.POST.get("noSupplier")) != 0:
+            product.supplier.sname = request.POST.get("inputSupplierName")
+            product.supplier.email = request.POST.get("inputEmail")
+            product.supplier.contact = request.POST.get("inputContact")
+            product.supplier.address = request.POST.get("inputAddress")
+    except TypeError:
+        pass
     product.save()
     messages.success(request, 'Product Updated Successfully.')
     return redirect('/')

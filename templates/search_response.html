@@ -33,7 +33,7 @@
                 {% if product.qty > 0 %}
                     <small class="well well-small ">in-stock</small>
                 {% else %}
-                    <small>out-of-stock</small>
+                    <small style="background:red; color:white;">out-of-stock</small>
                 {% endif %}
                     <span class="btn btn-dark p-1 rounded-circle" id="stock-value">{{ product.qty }}</span>
                 </span>
