@@ -76,6 +76,38 @@
 			padding: 10px;
 			margin-top: 10px;
 		}
+		.background {
+			position: absolute;
+			top: 0;
+			left: 0;
+			background: rgba(0,0,0, 0.7);
+			z-index: 1;
+			width: 100%;
+			height: 100%;
+			display: none;
+		}
+		.box-admin, .box-thankyou {
+			text-align: center;
+			position: absolute;top:50%;left:50%;width:400px;
+			z-index: 2; display:none;
+			margin: auto;
+			border-radius: 20px;
+			background: #fff;
+			color: #000;
+			transform: translate(-50%, -50%);
+			padding: 2rem 3rem;
+		}
+		#btn-ok{
+			    padding: .7rem 3rem !important;
+				margin: auto!important;
+				font-size: 1.2rem;
+				font-weight: 500;
+				border-radius: 22px!important;
+				margin-top: 1.2rem!important;
+		}
+		.box-admin{
+
+		}
 	</style>
 
 </head>
@@ -131,12 +163,61 @@
 
 				<div class="mt-4">
 					<div class="d-flex justify-content-center links">
-						<span class="text-white">Don't have an account? </span><a href="{% url 'register' %}" class="ml-2">Register</a>
+						<span class="text-white">Don't have an account? </span><a href="#" class=" register-btn ml-2">Register</a>
 					</div>
 
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<div class="background"></div>
+	<div class="box-admin">
+		<h2>Only Authorized User Can Register</h2>
+		<div class="m-auto text-white">
+			<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+				width="96" height="96"
+				viewBox="0 0 226 226"
+				style=" fill:#000000;">
+				<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#2ecc71"><path d="M113,21.1875c-50.62378,0 -91.8125,41.18872 -91.8125,91.8125c0,50.62378 41.18872,91.8125 91.8125,91.8125c50.62378,0 91.8125,-41.18872 91.8125,-91.8125c0,-50.62378 -41.18872,-91.8125 -91.8125,-91.8125zM113,35.3125c42.98194,0 77.6875,34.70557 77.6875,77.6875c0,42.98194 -34.70556,77.6875 -77.6875,77.6875c-42.98193,0 -77.6875,-34.70556 -77.6875,-77.6875c0,-42.98193 34.70557,-77.6875 77.6875,-77.6875zM113,56.5c-19.42187,0 -35.3125,15.89063 -35.3125,35.3125c0,10.7041 4.99341,20.22192 12.58008,26.70508c-15.89062,8.24878 -26.70508,24.85669 -26.70508,43.91992h14.125c0,-19.5874 15.7251,-35.3125 35.3125,-35.3125c19.58741,0 35.3125,15.7251 35.3125,35.3125h14.125c0,-19.06323 -10.81445,-35.67114 -26.70508,-43.91992c7.58667,-6.48316 12.58008,-16.00098 12.58008,-26.70508c0,-19.42187 -15.89062,-35.3125 -35.3125,-35.3125zM113,70.625c11.78003,0 21.1875,9.40747 21.1875,21.1875c0,11.78003 -9.40747,21.1875 -21.1875,21.1875c-11.78003,0 -21.1875,-9.40747 -21.1875,-21.1875c0,-11.78003 9.40747,-21.1875 21.1875,-21.1875z"></path></g></g></svg>
+			<!--<img src="{% static 'images/user.jpg' %}" style="background:transparent;"-->
+
+		</div>
+		<div>
+			<h5>Username:</h5><input type="text" placeholder="enter username" />
+			<h5>Enter Password</h5>
+			<input type="password" placeholder="enter password"/>
+			<br/>
+			<input id="btn-submit" type="button" class="btn btn-success" value="OK"/>
+		</div>
+	</div>
+	<div class="box-thankyou">
+		<h1>Thank you....</h1>
+		<button class="btn btn-primary" id="btn-ok" type="button">OK</button>
+	</div>
+	<script>
+		document.querySelector('.register-btn').addEventListener('click', function(){
+			if(confirm('Only the Administrator can register new user.\nPress \'Ok\' if you are Administrator.')){
+				//window.location.assign('/register/');
+
+				document.querySelector('.background').style.display="block";
+				document.querySelector('.box-admin').style.display="block";
+
+			}else{
+				document.querySelector('.background').style.display="block";
+				document.querySelector('.box-thankyou').style.display="block";
+			}
+		});
+		document.querySelector('#btn-ok').addEventListener('click', function(){
+			console.log("clicked");
+			document.querySelector('.background').style.display="none";
+			document.querySelector('.box-thankyou').style.display="none";
+		});
+		document.querySelector('#btn-submit').addEventListener('click', function(){
+			console.log("admin clicked");
+			document.querySelector('.background').style.display="none";
+			document.querySelector('.box-admin').style.display="none";
+		});
+	</script>
 </body>
 </html>
