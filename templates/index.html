@@ -707,7 +707,7 @@
     function newRow(){
         tr+=1;//alert(tr);
         $('tbody.items').append(
-            '<tr class="removable">'+
+            '<tr class="removable" id="row-'+tr+'">'+
                 '<td>'+tr+'.</td>'+
                 '<td class="text-left input-particulars">'+
                     '<input type="text" style="width:100%; border: none;" class="particular particular-'+tr+' bg-dark"/>'+
@@ -725,6 +725,7 @@
         var focusParticular = ".particular-"+tr;
         $(focusParticular).focus();
         getQty();
+        removeThisRow();
    }
    $('.input-discount').blur(function(){
         $(this).addClass('bg-dark');
@@ -782,6 +783,9 @@
             $(field).css('color', '#000');
         }
    }
+
+
+
 
    var PRINT = 0;
    $('.print-btn').click(printContent);
@@ -899,7 +903,34 @@
   }
 
    //---------------print bill end ----------------------------
+   //---------------remove row start----------------------------------
+   function removeThisRow(){
+       $('.particular').keyup(function(e){
+            // remove tr when not required (last one only)
+            let removeRow = 'row-' + tr;
+            let row = $(this).parent().parent();
+            if ( removeRow == row.attr('id')){
+                //alert(removeRow + e.key + e.which);
+                if(e.key=='Delete'){
+                    let item = $(this).val();
+                    let msg = '';
+                    if(item.length == 0)
+                        item = ' <empty> ';
+                    let deleteRow = confirm('The product ' + item + ' will be removed');
+                    if(deleteRow){
+                        console.log(deleteRow);
+                        row.hide();
+                        tr -=1;
+                        let setFocus = '.particular-'+tr;
+                        $(setFocus).focus();
+                        //console.log(--tr);
+                    }
+                }
+            }
+       });
+   }
 
+   //---------------remove row end ------------------------------
   });
 
 
