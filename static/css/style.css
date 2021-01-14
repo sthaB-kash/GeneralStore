@@ -25,5 +25,14 @@ tbody {
  span #stock-value {
     font-size: 0.6rem;
  }
-
+.dropdown-item {
+    padding: 0.4rem 1.5rem!important;
+}
+.dropdown-item:hover {
+    background: green!important;
+}
+hr {
+    margin: 0!important;
+    color: #fff!important;
+}
 
