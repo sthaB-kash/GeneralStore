@@ -37,6 +37,10 @@ class ProductList(APIView):
         pass
 
 
+def home_page(request):
+    return render(request, 'homepage.html')
+
+
 def register(request):
     form = CreateUserForm()
     if request.method == "POST":

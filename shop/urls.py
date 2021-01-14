@@ -21,11 +21,12 @@ from myapp import views
 from django.conf import settings
 from django.conf.urls.static import static
 
-#rest framework
+# rest framework
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('home/', views.home_page, name="home-page"),
     path('products/', views.ProductList.as_view()),
     path('register/', views.register, name="register"),
     path('login/', views.login_page, name="login"),
