@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <!--FontAwesome and  required for contact us-->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <link rel="stylesheet" href="{% static 'css/home_page/style.css' %}?{% now 'U' %}">
     <!--Font awesome kit's code-->
     <script src="https://kit.fontawesome.com/3acd0fa98d.js" crossorigin="anonymous"></script>
 
@@ -16,186 +17,9 @@
 
     <title>General Store</title>
     <style>
-        * {
-            margin: 0; padding: 0; box-sizing: border-box
-        }
-        section.main {
-            /* background-color: #2e2e2e; */
-            /* font-size: 60px; */
-            color: #fff;
-            height: 100vh;
-            position: relative;
-            background-image: url("https://www.finewebstores.com/assets/images/metalsigns/leedubin/vintage-store2.jpg");
-        }
-        .welcome-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            color: #fff;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
-        .welcome {
-            animation-name: leftToRight;
-            animation-duration: 100ms;
-            animation-delay: 1s;
-
-        }
-        .welcome h1 {
-            font-size: 3rem;
-        }
-        .slogan {
-            margin: 10px 0 50px 0;
-            animation-name: rightToLeft;
-            animation-duration: 100ms;
-            animation-delay: 1s;
-        }
-        .welcome, .slogan, .login-btn {position: relative;
-            visibility: hidden;
-            animation-fill-mode: forwards;
-        }
-        .style {
-            height: 100vh;
-            position: absolute;
-            width: 100%;
-            top: 0; left: 0;
-            background-color: rgba(31, 30, 30, 0.9);
-            clip-path: polygon(100% 27.5%, 100% 100%, 0 100%, 0 27.5%, 50% 76%);
-            animation-name: buttomUp;
-            animation-duration: 1s;
-            animation-delay: 100ms;
-        }
-        .style1 {
-            position: absolute;
-            height: 80vh;
-            background-color: rgba(67, 109, 201, 0.9);
-            width: 100%;
-            top: 0;
-            left: 0;
-            clip-path: polygon(100% 35%, 50% 95%, 0 35%, 0 0, 100% 0);
-            animation-name: topDown;
-            animation-duration: 1s;
-            animation-delay: 100ms;
-        }
-        .login-btn {
-            color: #fff;
-            border: 3px solid whitesmoke;
-            border-radius: 15px;
-            padding: 10px 30px;
-            font-weight: 600;
-            position: relative;
-            animation-name: login_flip;
-            animation-duration: 500ms;
-            animation-delay: 2s;
-
-        }
-        .login-btn:hover{
-            color:rgba(67, 109, 201, 0.9);
-            background: #fff;
-            font-weight: 800;
-
-        }
-        @keyframes topDown {
-            50%{
-                top:100vh;
-            }
-        }
-        @keyframes buttomUp{
-            50%{
-                top: -100vh;
-            }
-        }
-        @keyframes leftToRight {
-            0%{
-                left: -50px;
-             }20%{
-                left: -40px;
-             }40%{
-                left: -30px;
-
-            }60%{
-                left: -20px;
-            }80%{
-                left: -10px;
-            }100%{
-                left: 0px;
-                visibility: visible;
-            }
-        }
-        @keyframes rightToLeft {
-            0%{
-                right: -50px;
-             }20%{
-                right: -40px;
-             }40%{
-                right: -30px;
-            }60%{
-                right: -20px;
-            }80%{
-                right: -10px;
-            }100%{
-                right: 0px;
-                visibility: visible;
-             }
-        }
-        @keyframes login_flip{
-            25%{
-                color: red;
-            }
-            50%{
-                transform: rotate(360deg);
-                color: green;
-            }
-            75%{
-                color: blue;
-            }
-            100%{
-                /* transform: rotate(-180deg); */
-                visibility: visible;
-            }
-        }
-
-        /* contact us css start */
-        .contact{
-            /* #16c9f6 */
-            background: linear-gradient(160deg,rgba(67, 109, 201, 0.9) 55%,#fff 0%);
-        }
-        .contact h1{
-            /*color: rgb(13, 228, 217);*/
-            color: #fff;
-            padding-top: 30px;
-            text-align: center;
-            letter-spacing: 3px;
-            margin-bottom: 0;
-        }
-        .contact #bar{
-            width: 200px;
-            height: 3px;
-            border: 2px solid linear-gradient(to right, blue,red);
-            border-radius: 4px;
-            margin: 0 auto;
-            margin-bottom: 25px;
-            background: linear-gradient(to right,blue,red)
-
-        }
-        .contact .address {
-            color: rgba(255,255,255,0.91);
-            line-height: 15px;
-        }
-
-        /* contact us css end */
-
-        footer > p {
-            margin: 0;
-            padding: 20px;
-            text-align: center;
-            color: #fff;
-            background-color:rgba(67, 109, 201)
-        }
-
     </style>
 </head>
-<body>
+<body id="top">
     <section class="container-fluid main">
         <div class="style"></div>
         <div class="style1"></div>
@@ -208,15 +32,33 @@
         </div>
     </section>
 
-    <section class="container-fluid">
-        <h1 class="text-center text-primary">Our Suppliers</h1>
-        <div style="height: 200px"></div>
+    <section class="products-section container-fluid">
+        <p><span class="product-text">Available Products</span>
+            <span class="view-product-btn animate"> <span class="animate-text"> > </span> </span></p>
+    </section>
+
+    <section class="container-fluid supplier-section" >
+        <h1 class="text-center">Our Suppliers</h1>
+        <div class="move-left"><</div>
+        <div class="supplier-container d-flex justify-content-space-between">
+            {% for supplier in suppliers %}
+            <div class="supplier">
+                 <div class="supplier-name">
+                    <h1>{{ supplier.sname }}</h1>
+                </div>
+                <div class="supplier-address">
+                    {{ supplier.address }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="move-right">></div>
     </section>
 
     <!--contact us-->
     <div class="container-fluid contact" id="contact">
-        <h1 class="text-center">Contact us</h1><p id="bar"></p>
-        <h6 class="text-center text-white text-uppercase ">we love to hear from you.</h6>
+        <h1 class="text-center">Contact us</h1>
+        <h6 class="text-center text-white">we love to hear from you.</h6>
         <div class="row m-5">
           <div class="col-sm-12 col-md-4 address ">
             <h5 style="text-decoration:underline; font-size:25px">We are at:</h5>
@@ -281,6 +123,51 @@
         <p>&copy;All Rights Reserved | 2021</p>
     </footer>
 
+
+    <!-- Modal -->
+    <div class="modal fade" id="productDetails" tabindex="-1" aria-labelledby="productDetailsLabel" aria-hidden="true"
+         data-backdrop="static" data-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="productDetailsLabel">Available Products</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+             <table class="table table-striped table-hover table-responsive-md">
+                 <thead class="bg-danger">
+                    <tr><th>SN</th><th>Code</th><th>Name</th><th>Qty</th><th>Price/Unit(Rs)</th><th>MFD</th></tr>
+                 </thead>
+                 <tbody>
+                 {% for product in products %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ product.pid }}</td>
+                        <td>{{ product.pname }}</td>
+                        <td>{{ product.qty }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.mfd }}</td>
+                    </tr>
+                 {% endfor %}
+                 </tbody>
+             </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success close-btn m-auto" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/home_page' %}"></script>
+    <script src="{% static 'js/home_page' %}"></script>
+    <script src="{% static 'js/home_page' %}"></script>
+    <script src="{% static 'js/home_page' %}"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
 
