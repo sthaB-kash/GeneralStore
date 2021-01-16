@@ -38,7 +38,9 @@ class ProductList(APIView):
 
 
 def home_page(request):
-    return render(request, 'homepage.html')
+    home_page_suppliers = Supplier.objects.all()
+    home_page_products = Product.objects.all()
+    return render(request, 'homepage.html', {'suppliers': home_page_suppliers, 'products': home_page_products })
 
 
 def register(request):
@@ -64,14 +66,20 @@ def login_page(request):
         # print(username)
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            login(request, user)
-            # print(user)
-            request.session['user_id'] = user.id
-            request.session['user_email'] = user.email
-            return redirect('/')
+            if request.POST.get('superuser_login'):
+                if user.is_superuser:
+                    return redirect('register')
+                else:
+                    messages.info(request, "Username or  Password is invalid")
+                    return render(request, 'login.html', {'superuser_login': True})
+            else:
+                login(request, user)
+                # print(user)
+                request.session['user_id'] = user.id
+                request.session['user_email'] = user.email
+                return redirect('/')
         else:
             messages.info(request, "Username or  Password is invalid")
-
     context = {}
     return render(request, "login.html", context)
 

@@ -30,17 +30,27 @@
     #form-title{
         color: #fff;
     }
-    .login_btn {
+    .register_btn {
         width: 100%;
         background: #33ccff !important;
         color: white !important;
     }
-    .login_btn:focus {
+    .register_btn:focus {
         box-shadow: none !important;
         outline: 0px !important;
     }
-    .login_container {
-        padding: 0 2rem;
+    .register_container {
+        padding: 0!important;
+    }
+    .register-btn {
+        background: rgb(67, 109, 201)!important;
+        color:#fff!important;
+    }
+    .register-btn:hover {
+        background: rgba(67, 109, 201, 0.8)!important;
+    }
+    .register-cancel-btn, .register-btn {
+        width: 49%!important;
     }
     .input-group-text {
         background: #f7ba5b !important;
