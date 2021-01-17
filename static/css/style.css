@@ -1,22 +1,66 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script&family=Prompt&display=swap');
-body {
-    font-family: 'Poppins', sans-serif;
+
+html {
+  --scrollbarBG: #CFD8DC;
+  --thumbBG: #90A4AE;
+}
+.modal::-webkit-scrollbar,body::-webkit-scrollbar {
+  width: 11px;
+}
+.modal, body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+  font-family: 'Poppins', sans-serif;
+}
+.modal::-webkit-scrollbar-, body::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+.modal::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG) ;
+  border-radius: 6px;
+  border: 3px solid var(--scrollbarBG);
 }
 
 *{
     box-sizing: border-box;
     margin: 0;
-     padding: 0;
-}
-.general-store {
-    display: none;
+    padding: 0;
 }
 
+.navbar {
+    color: #fff!important;
+    background: rgb(67, 109, 201);
+}
+
+.general-store {
+    display: none;
+    color: #fff!important;
+}
+.generalStore {
+    color: #fff;
+}
+.nav-link {
+    color: #fff;
+}
+#inputSearch {
+    box-shadow: 2px 2px 2px gray;
+}
+#inputSearch:hover {
+    border: 4px solid rgba(67, 109, 206, 0.5);
+}
 #searched-data {
     min-width: 100%;
     overflow: auto;
-
+}
+.products-heading {
+    color: green;
+    font-size: 1.6rem;
+    font-variant: all-small-caps;
+}
+#searched-data .table>thead {
+    background: rgba(67, 109, 201, 0.9);
+    color: rgba(255, 255, 255, 0.9);
 }
 tbody {
     font-size: 0.8rem;
