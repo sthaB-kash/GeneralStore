@@ -50,7 +50,7 @@ function showHide(){
 function deleteProduct(id, name){
     //const choice = confirm('Are you sure to delete this product?', name);
     document.querySelector('#deleteMsg').innerHTML = "<strong>"+name+"</strong>";
-    $('#del-product').attr({'href': });
+    $('#del-product').attr('href', '');
     //document.querySelector('#del-product').href
     alert($('.del-product').parent().attr('id'))
  }

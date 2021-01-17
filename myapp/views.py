@@ -108,8 +108,36 @@ def index(request):
         return render(request, "index.html")
 
 
-def test(request):
-    return render(request, "msg.html")
+def users(request):
+    if request.method == "POST":
+        user_updated_status = False
+        user = json.loads(request.POST.get('user'))
+        fname = user['fname']
+        lname = user['lname']
+        email = user['email']
+        active = user['active']
+        privilege = user['privilege']
+        print(fname,lname,email,active,privilege)
+        update_user = User.objects.get(id=int(user['id']))
+        update_user.first_name = fname
+        update_user.last_name = lname
+        update_user.email = email
+        update_user.is_active = active
+        update_user.is_staff = privilege
+        update_user.save()
+        user_updated_status = True
+
+        return JsonResponse({'success': user_updated_status}, safe=False)
+    else:
+        try:
+            user_id = int(request.GET.get('user_id'))
+            print(user_id)
+            requested_user = User.objects.values().get(id=user_id)
+            return render(request, "selectedUser.html", {'user': requested_user})
+        except:
+            pass
+        registered_users = User.objects.all()
+        return render(request, "RegisteredUsers.html", {'users': registered_users})
 
 
 def search(request):

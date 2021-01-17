@@ -1,0 +1,67 @@
+<!-- Modal -->
+    <div class="modal fade" id="userDetails" tabindex="-1" aria-labelledby="userDetailsLabel" aria-hidden="true"
+         data-backdrop="static" data-keyboard="false"
+    >
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header text-white">
+            <h5 class="modal-title" id="userDetailsLabel">Available Users</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+             <table class="table table-striped table-hover table-responsive-md">
+                 <thead class="bg-danger text-white">
+                    <tr><th>SN</th><th>Username</th><th>Email</th><th>Last-login</th><th>Admin-Privilege</th></tr>
+                 </thead>
+                 <tbody>
+                 {% for user in users %}
+                    <tr class="user" id="{{user.id}}">
+                        <td class="user-data">{{ forloop.counter }}</td>
+                        <td class="user-data">{{ user.username }}</td>
+                        <td class="user-data">{{ user.email }}</td>
+                        <td class="user-data">{{ user.last_login }}</td>
+                        <td class="user-data">
+                            {% if user.is_staff %}
+                                Allowed
+                            {% else %}
+                                Denied
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                 {% endfor %}
+                 </tbody>
+             </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success close-btn m-auto" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<div id="selected-user"></div>
+
+<script>
+    $('#userDetails').modal('show');
+
+    $("#userDetails").on('hidden.bs.modal', function(e){
+        $(".user-info").html('');
+    });
+
+    $('.user').click(function(){
+         $.ajax({
+            url: '/users/',
+            type: 'get',
+            data: {'user_id': Number($(this).attr('id'))},
+
+            success: function(response){
+                $('#selected-user').html(response);
+            }
+        });
+    });
+    $('#userDetails .modal-header').css('background', 'rgba(67, 109, 201, 0.9)');
+</script>
+

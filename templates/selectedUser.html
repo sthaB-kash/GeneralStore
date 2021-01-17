@@ -1,0 +1,164 @@
+
+<div class="modal fade " id="selectedUserModal" tabindex="-1" aria-labelledby="selectedUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title text-white text-center" id="selectedUserModalLabel">{{ user.username }} :: <span id="userID">{{ user.id }}</span></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" class="btn btn-danger text-white">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="needs-validation user-form">
+          {% csrf_token %}
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="inputFirstName">First Name:</label>
+              <input type="text" class="form-control" id="inputFirstName"  name="inputFirstName" value="{{ user.first_name }}"
+                     pattern="^[a-zA-Z. ]{2,10}$" required/>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="inputLastName">Last Name:</label>
+              <input type="text" class="form-control" id="inputLastName" value="{{ user.last_name }}" pattern="^[a-zA-Z. ]{2,10}$"
+                     name="inputLastName" required/>
+            </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col-12 mb-3">
+                <label>E-mail:</label>
+                <input type="email" id="inputEmail" value="{{ user.email }}" class="form-control input-email" required/>
+              </div>
+          </div>
+          <div class="form-row">
+            <div class="col-md-6 mb-3">
+              <label for="lastLogin">Last login:</label>
+              <input type="text" class="form-control" id="lastLogin" value="{{ user.last_login }}" readonly/>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="doj">Date of Join:</label>
+              <input type="text" class="form-control" id="doj" value="{{ user.date_joined }}" readonly/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-check">
+              {% if user.is_staff %}
+                {% if user.is_superuser %}
+                  <input class="form-check-input" type="checkbox" checked name="privilege" id="privilege" disabled/>
+                {% else %}
+                  <input class="form-check-input" type="checkbox" checked name="privilege" value="Allowed" id="privilege" />
+                {% endif %}
+              {% else %}
+                <input class="form-check-input" type="checkbox"  name="privilege" id="privilege" />
+              {% endif %}
+              <label class="form-check-label" for="privilege">
+                Admin Privilege
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col-12 mb-3">
+                  <label>Active Status:</label>
+                   <select id="active-status" name="status" class="custom-select status" required>
+                       <option disabled selected>---select status --</option>
+                       {% if user.is_active %}
+                            <option value="Active" selected>Active</option>
+                            <option value="Left">Left</option>
+                       {% else %}
+                            <option value="Active">Active</option>
+                            <option value="Left" selected>Left</option>
+                       {% endif %}
+                   </select>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
+              <label class="form-check-label" for="invalidCheck">
+                Make Changes
+              </label>
+              <div class="invalid-feedback">
+                You must agree before submitting.
+              </div>
+            </div>
+          </div>
+          <button class="btn btn-success form-row col-12 btn-update-user" type="submit">Update User Details</button>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary px-3 m-auto" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#selectedUserModal').modal('show');
+    $('.user-form').on('submit', function(e){
+      e.preventDefault();
+      const token = $('input[name=csrfmiddlewaretoken]').val();
+      const active = document.querySelector('#active-status').selectedIndex === 1 ? true: false;
+      let user = {
+        id: $('#userID').text(),
+        fname: $('#inputFirstName').val(),
+        lname: $('#inputLastName').val(),
+        email: $('.input-email').val(),
+        active: active,
+        privilege: document.querySelector('#privilege').checked === true ? true: false
+      };
+      user = JSON.stringify(user);
+
+      $.ajax({
+        url: '/users/',
+        type: 'post',
+        data: {'user': user, 'csrfmiddlewaretoken': token},
+        success: function(response){
+            $('#updateMessage').modal('show');
+            if(response.success){
+              $('.modal-body #updateMsg').text('Updated Successfully');
+            }else{
+              $('.modal-body #updateMsg').text('Failed to update! Please try again...');
+            }
+            $('#updateMessage').on('hidden.bs.modal', function(){
+                $('#selectedUserModal').modal('hide');
+                $('#userDetails').removeAttr('data-backdrop');
+                $('#userDetails').removeAttr('data-keyboard');
+                $('#userDetails').modal('hide');
+                $('#userDetails').on('hidden.bs.modal',function(){
+                    console.log('hidden');
+                    $('#users').trigger('click');
+                    console.log('completed me');
+                });
+            });
+        }
+    });
+
+    });
+</script>
+
+
+
+<!--Update message-->
+<div class="modal fade" id="updateMessage" tabindex="-1" aria-labelledby="updateMessageLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header text-white" style="background: rgba(67, 109, 201, 0.9);">
+        <h5 class="modal-title" id="updateMessageLabel">Update Message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="updateMsg"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success m-auto py-2 px-4" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

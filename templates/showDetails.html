@@ -22,7 +22,7 @@
           {% csrf_token %}
           <div class="form-row text-muted">
             <small class="col-md-6 mb-3">{{ product.doe }}</small>
-            <small class="col-md-6 mb-3">by: username</small>
+            <small class="col-md-6 mb-3">by: {{ request.user }}</small>
           </div>
           <div class="form-row">
             <div class="col-md-6 mb-3">
