@@ -80,3 +80,13 @@ hr {
     color: #fff!important;
 }
 
+.newProduct-container {
+    box-shadow: 2px 7px 12px 2px grey;
+    padding: 22px 42px!important;
+    width: 60%!important;
+}
+@media screen and (max-width: 992px){
+    .newProduct-container {
+        width: 100%!important;
+    }
+}
