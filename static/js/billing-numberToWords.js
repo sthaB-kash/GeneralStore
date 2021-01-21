@@ -20,9 +20,9 @@ var num = {
 
 
        //document.querySelector('.qty').addEventListener('input',
-       function amountInWords(){
+       function amountInWords(amt){
             //console.log("selected");
-            var amount = Number($('.g-total').html()).toFixed(2);
+            var amount = Number(amt).toFixed(2);
             amount = amount.split('.');
             var rupees = ''
             var paisa = '';

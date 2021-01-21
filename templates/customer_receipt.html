@@ -1,0 +1,49 @@
+
+<div class="modal fade" id="customerBillModal" tabindex="-1" aria-labelledby="customerBillModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="customerBillModalLabel">Receipt >> {{ receipt.bill.customer.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Bill no: {{ receipt.bill.id }}</p>
+        <p>Date : {{ receipt.bill.date }}</p>
+        <p class="json">{{receipt.purchase_items}}</p>
+        <table class="table table-hover table-striped table-dark">
+          <thead>
+            <tr><th>SN</th><th>Particulars</th><th>Qty</th><th>Price</th><th>Total(Rs.)</th></tr>
+          </thead>
+          <tbody>
+            {% for item in receipt.purchase_items %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td class="purchase-items">{{ item }}</td>
+                <td>qty</td>
+                <td>price</td>
+                <td>total</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $('#customerBillModal').modal('show');
+    var items;
+    $('.purchase-items').each(function(){
+        items = JSON.parse($(this).html());
+        console.log(items);
+    });
+</script>

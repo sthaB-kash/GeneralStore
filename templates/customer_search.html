@@ -1,0 +1,49 @@
+
+<thead>
+    <th>S.N</th><th>Customer's Name</th><th>Amount</th><th>Date</th><th>Sold-By</th>
+</thead>
+
+{% for customer in customers %}
+    <tr id="{{ customer.id }}" class="customer-row">
+        <td>{{ forloop.counter }}</td>
+        <td>{{customer.customer.name}}</td>
+        <td>{{ customer.amount }}</td>
+        <td>{{ customer.date }}</td>
+        <td>{{ customer.sold_by.username }}<input type="hidden" id="no-of-records-hidden" value="{{no}}"/></td>
+    </tr>
+{% endfor %}
+</tbody>
+
+<script>
+    $('#no-of-records').html($('#no-of-records-hidden').val());
+
+    $('.customer-row').click(function(){
+        $.ajax({
+            url: '/customer_receipt/',
+            type: 'get',
+            data: { 'id': $(this).attr('id') },
+            success: function(response){
+                //$('.receipt-div').html(response);
+                $('#customerBillModal').modal('show');
+                //console.log(response.receipt);
+                $('#customerBillModalLabel').html(response.customer.name);
+                $('.bill-no').html(response.receipt.id);
+                $('.bill-date').html(Date('{{ response.receipt.date | date:"D, d M Y H:i:s" }}').toLocaleString());
+                $('.bill-customer-address').html(response.customer.address);
+                $('.bill-customer-contact').html(response.customer.contact);
+                var sn=1;
+                $('#purchase-items').html('');
+                for(item of response.particulars.purchase_items){
+                    $('#purchase-items').append('<tr style="font-size:0.8rem;"><td>'+ sn++ +'</td><td>'+item.item+'</td><td>'+
+                        item.qty + '</td><td>' + item.price +'</td><td>'+item.total+'</td></tr>'
+                    );
+                }
+                $('.receipt-total-amt').html(response.receipt.amount);
+                $('.receipt-dis').html(response.receipt.discount);
+                $('.receipt-g-total').html(response.receipt.paid_amount);
+                $('.receipt-amt-words').html("  "+amountInWords($('.receipt-g-total').html())+".");
+
+            }
+        });
+    });
+</script>

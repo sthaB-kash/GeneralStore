@@ -21,6 +21,7 @@ from django.shortcuts import get_object_or_404
 # prevent from accessing page without login
 from django.contrib.auth.decorators import login_required
 
+import datetime
 import cv2
 import numpy as np
 import pyzbar.pyzbar as pyzbar
@@ -363,9 +364,37 @@ def make_bill(request):
     return JsonResponse({'success': True}, safe=False)
 
 
+def customer_receipt(request):
+    bill = Bill.objects.values().get(id=request.GET.get('id'))
+    customer = Customer.objects.values().get(id=bill['customer_id'])
+    particulars = Particulars.objects.values().get(bill=bill['id'])
+    # particulars = json.loads('{particulars:'+str(receipt.purchase_items)+'}')
+    # print(particulars)
+    # print(type(particulars))
+    return JsonResponse({'receipt': bill, 'customer': customer, 'particulars': particulars}, safe=False)
+
+
 def customer_details(request):
-    customers = Bill.objects.all()
-    return render(request, "customer_details.html", {'customers': customers})
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    data = request.GET.get('data')
+    #
+    if request.GET.get('customer_search') == '1':
+        # print("search")
+        customers = Bill.objects.filter(customer__name__startswith=request.GET.get('data'))
+        return render(request, "customer_search.html", {'customers': customers, 'no': customers.count()})
+    elif data:
+        # print("inside date")
+        customers = Bill.objects.filter(date__startswith=request.GET.get('data'))
+        date = request.GET.get('data')
+    else:
+        customers = Bill.objects.all()
+        # print("all")
+
+    return render(request, "customer_details.html", {'customers': customers, 'date': date, 'no': customers.count()})
+
+
+def reports(request):
+    return render(request, "all_reports.html")
 
 
 def curd(request):

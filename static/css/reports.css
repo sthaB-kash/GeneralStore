@@ -1,0 +1,27 @@
+.all-reports-div {
+    padding: 2rem!important;
+}
+.all-reports-div >div:hover {
+    background-color: rgb(67, 109, 201);
+    color: #fff;
+    box-shadow: none;
+    border-radius: 10px;
+}
+.all-reports-div >div {
+    margin-top: 1.5rem;
+    color: 	rgb(92, 184, 92);
+    background-color: whitesmoke;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 10px 5px 3px 4px gray;
+}
+
+.all-reports-div > div >p {
+    font-size: 1.7rem;
+}
+.transaction-between {
+    font-size: 1.1rem!important;
+}
+.transaction-between input{
+    padding-left: 5px;
+}

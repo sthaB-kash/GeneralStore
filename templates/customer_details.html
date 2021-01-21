@@ -1,11 +1,24 @@
 <div class="container">
-    <table class="table table-bordered table-hover table-striped table-sm">
+    <div class=" my-4 p-2 row mt-0">
+        <input class="form-control col-sm-12 col-md-4 mr-sm-2" type="button" value="All"
+               id="allDate" style="background:rgba(67, 109, 201, 0.8); color: #fff;"/>
+        <input class="form-control col-sm-12 col-md-4 mr-sm-2 m-auto" name="customerSearch" type="text"
+               id="customerSearch" placeholder="Enter name of customer" aria-label="Search" />
+        <input class="form-control col-sm-12 col-md-4 mr-sm-2" name="receiptDate" type="date" value="{{ date }}"
+               id="receiptDate" />
+    </div>
+
+</div>
+
+<div class="container">
+    <p class="m-auto text-success" style="font-weight:bold; font-size:1rem;">No.of records:<span id="no-of-records">{{no}}</span></p>
+    <table class="table table-bordered table-hover table-striped table-sm customers-data">
         <thead>
             <th>S.N</th><th>Customer's Name</th><th>Amount</th><th>Date</th><th>Sold-By</th>
         </thead>
         <tbody>
         {% for customer in customers %}
-            <tr>
+            <tr id="{{ customer.id }}" class="customer-row">
                 <td>{{ forloop.counter }}</td>
                 <td>{{customer.customer.name}}</td>
                 <td>{{ customer.amount }}</td>
@@ -16,3 +29,117 @@
         </tbody>
     </table>
 </div>
+
+<div class="receipt-div"></div>
+
+
+<div class="modal fade" id="customerBillModal" tabindex="-1" aria-labelledby="customerBillModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" style="background: rgba(67, 109, 201, 0.8)">
+        <h5 class="modal-title text-white" id="customerBillModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="font-size: 0.8rem!important;">
+          <p>Bill no: <span class="bill-no"></span></p>
+<!--          <p> Date: <span class="bill-date"></span></p>-->
+          <p>Address: <span class="bill-customer-address"> </span></p><p>Contact: <span class="bill-customer-contact"></span> </p>
+
+        <table class="table table-hover table-striped table-dark">
+          <thead>
+            <tr><th>SN</th><th>Particulars</th><th>Qty</th><th>Price</th><th>Total(Rs.)</th></tr>
+          </thead>
+          <tbody id="purchase-items">
+          </tbody>
+
+            <tfoot>
+                <tr>
+                    <td rowspan="3" colspan="3"><span class="text-muted">In words:</span> <span class="receipt-amt-words"></span></td>
+                    <td>Total</td>
+                    <td class="receipt-total-amt"></td>
+                </tr>
+                <tr>
+                    <td>Dis.(%)</td>
+                    <td class="receipt-dis"></td>
+                </tr>
+                <tr>
+                    <td>Grand Total</td><td class="receipt-g-total"></td>
+                </tr>
+            </tfoot>
+        </table>
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary px-3 m-auto" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+    $('.customer-row').click(function(){
+        $.ajax({
+            url: '/customer_receipt/',
+            type: 'get',
+            data: { 'id': $(this).attr('id') },
+            success: function(response){
+                //$('.receipt-div').html(response);
+                $('#customerBillModal').modal('show');
+                //console.log(response.receipt);
+                $('#customerBillModalLabel').html(response.customer.name);
+                $('.bill-no').html(response.receipt.id);
+                $('.bill-date').html(Date('{{ response.receipt.date | date:"D, d M Y H:i:s" }}').toLocaleString());
+                $('.bill-customer-address').html(response.customer.address);
+                $('.bill-customer-contact').html(response.customer.contact);
+                var sn=1;
+                $('#purchase-items').html('');
+                for(item of response.particulars.purchase_items){
+                    $('#purchase-items').append('<tr style="font-size:0.8rem;"><td>'+ sn++ +'</td><td>'+item.item+'</td><td>'+
+                        item.qty + '</td><td>' + item.price +'</td><td>'+item.total+'</td></tr>'
+                    );
+                }
+                $('.receipt-total-amt').html(response.receipt.amount);
+                $('.receipt-dis').html(response.receipt.discount);
+                $('.receipt-g-total').html(response.receipt.paid_amount);
+                $('.receipt-amt-words').html("  "+amountInWords($('.receipt-g-total').html())+".");
+
+            }
+        });
+    });
+
+    document.querySelector('#receiptDate').onchange= function(){
+        ajaxCall(this.value, 0);
+    }
+
+    //show all
+    $('#allDate').click(function(){
+        $('#customers-tab').trigger('click');
+    });
+
+    $('#customerSearch').keyup(function(){
+        ajaxCall($(this).val(), 1);
+    });
+
+    function ajaxCall(data, customer){
+        //customer = Boolean(customer);
+        $.ajax({
+            url: '/customer_details/',
+            type: 'get',
+            data: { 'data': data , 'customer_search': customer},
+            success: function(response){
+                if(customer){
+                    $('.customers-data').html(response);
+                }
+                else
+                    $('#customer-details').html(response);
+
+                //console.log(response);
+            }
+        });
+    }
+
+</script>

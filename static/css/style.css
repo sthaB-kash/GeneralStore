@@ -32,7 +32,9 @@ html {
     color: #fff!important;
     background: rgb(67, 109, 201);
 }
-
+.navbar-toggler {
+    padding: 0!important;
+}
 .general-store {
     display: none;
     color: #fff!important;

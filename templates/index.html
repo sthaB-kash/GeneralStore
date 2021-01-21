@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}?{% now 'U' %}"/>
     <link rel="stylesheet" href="{% static 'css/style_for_no_of_products_suppliers_and_customers.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/billing.css' %}?{% now 'U' %}"/>
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}?{% now 'U' %}"/>
 
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -505,7 +506,7 @@
         </div>
         <!--reports tab-->
         <div class="tab-pane fade" id="reports" role="tabpanel" aria-labelledby="reports-tab">
-            <p class=" display-1">all reports</p>
+            <div id="all-reports"></div>
         </div>
 
       </div>
@@ -612,7 +613,7 @@
             var discount_amt = $('.total-amt').html()*(Number(dis_percent)/100);
             $('.dis-val').html(discount_amt.toFixed(2));
             $('.g-total').html((Number($('.total-amt').html()) - discount_amt.toFixed(2)).toFixed(2));
-            $('#amt-in-words').html(amountInWords());
+            $('#amt-in-words').html(amountInWords($('.g-total').html()));
         }else{
             $(this).val('');
         }
@@ -964,6 +965,7 @@
   <script src ="{% static 'js/billing-numberToWords.js' %}?{% now 'U' %}">/</script>
   <script src="{% static 'js/calTotalPrice.js' %}?{% now 'U' %}" ></script>
   <script src="{% static 'js/customers.js' %}?{% now 'U' %}"></script>
+  <script src="{% static 'js/all_reports.js' %}?{% now 'U' %}"></script>
   <script src="{% static 'js/get_all_product_details.js' %}?{% now 'U' %}"></script>
   <script src="{% static 'js/users.js' %}?{% now 'U' %}"></script>
 
@@ -983,6 +985,8 @@
                  $('.bi-x-square').removeClass('d-none');
                 $('.navbar-toggler').trigger('click');
             });
+
+
         </script>
 
   </body>
