@@ -105,46 +105,7 @@ def index(request):
         # customers = Bill.objects.all()
 
 
-        # check for expiry date
-        today = datetime.now().date()
-        product_expiry = Product.objects.all().values('id', 'exp', 'qty')
-        product_expiry_id = list()
-        expired_product_id = list()
-        low_qty_id = list()
-        for product in product_expiry:
-            diff = product['exp'] - today
-            if (diff.days <= 55) and (diff.days > 0):
-                product_expiry_id.append(product['id'])
-            elif diff.days <= 0:
-                expired_product_id.append(product['id'])
-            else:
-                pass
-
-            low_qty_value = 20
-            if product['qty'] < 20:
-                low_qty_id.append(product['id'])
-
-        print(product_expiry_id)
-        print(expired_product_id)
-        product_near_expiry_date = len(product_expiry_id)
-
-        if product_near_expiry_date > 0:
-            msg = Notification.objects.get(id=1)
-            msg.des = str(product_near_expiry_date)+' products are near expiry date'
-            msg.save()
-
-        expired_product = len(expired_product_id)
-        if expired_product > 0:
-            msg = Notification.objects.get(id=2)
-            msg.des = str(expired_product)+' products have been expired'
-            msg.save()
-
-        low_qty = len(low_qty_id)
-        if low_qty > 0:
-            msg = Notification.objects.get(id=5)
-            msg.des = str(low_qty) + ' products are below 20'
-            msg.save()
-
+        get_major_notification(0)
         notification = Notification.objects.filter(unread=True).count()
 
         return render(request, "index.html", {'products': all_products, 'sn': sn, 'suppliers': all_suppliers,
@@ -154,6 +115,20 @@ def index(request):
 
 
 def notification(request):
+    try:
+        key = int(request.GET.get('key'))
+        notification_title = Notification.objects.get(pk=key).des
+        if key == 1:
+            n_products = Product.objects.filter(pk__in=get_major_notification(1))
+        elif key == 2:
+            n_products = Product.objects.filter(pk__in=get_major_notification(2))
+        elif key == 5:
+            n_products = Product.objects.filter(pk__in=get_major_notification(5))
+        print("low qty:", low_qty_id)
+        return render(request, "selected_notification.html", {'products': n_products, 'title': notification_title})
+    except:
+        pass
+    get_major_notification(0)
     notifi = Notification.objects.filter(unread=True)
     return render(request, "notification.html", {'notification': notifi})
 
@@ -460,6 +435,64 @@ def reports(request):
     return render(request, "all_reports.html")
 
 
+def get_major_notification(key):
+    # check for expiry date
+    text = ''
+    today = datetime.now().date()
+    product_expiry = Product.objects.all().values('id', 'exp', 'qty')
+    product_expiry_id = list()
+    expired_product_id = list()
+    low_qty_id = list()
+    for product in product_expiry:
+        diff = product['exp'] - today
+        if (diff.days <= 55) and (diff.days > 0):
+            product_expiry_id.append(product['id'])
+        elif diff.days <= 0:
+            expired_product_id.append(product['id'])
+        else:
+            pass
+
+        low_qty_value = 20
+        if product['qty'] < 20:
+            low_qty_id.append(product['id'])
+
+    print(product_expiry_id)
+    print(expired_product_id)
+    product_near_expiry_date = len(product_expiry_id)
+
+    if product_near_expiry_date > 0:
+        msg = Notification.objects.get(id=1)
+        msg.des = str(product_near_expiry_date) + ' Products are near expiry date.'
+        msg.save()
+
+    expired_product = len(expired_product_id)
+    if expired_product > 0:
+        msg = Notification.objects.get(id=2)
+        if expired_product > 1:
+            text = ' Products have been expired.'
+        else:
+            text = ' Product has been expired.'
+        msg.des = str(expired_product) + text
+        msg.save()
+
+    low_qty = len(low_qty_id)
+    if low_qty > 0:
+        msg = Notification.objects.get(id=5)
+        if low_qty > 1:
+            text = ' Product has QTY less than 20'
+        else:
+            text = ' Products have QTY less than 20'
+        msg.des = str(low_qty) + text
+        msg.save()
+
+    if key == 1:
+        return product_expiry_id
+    elif key == 2:
+        return expired_product_id
+    elif key == 5:
+        return low_qty_id
+
+
 def curd(request):
     students = Students.objects.all()
     return render(request, "curd.html", {'students': students})
@@ -507,3 +540,7 @@ def update(request, sid):
     # return render(request, "curd.html", {"students": students})
     return redirect('/curd')
 
+
+product_expiry_id = list()
+expired_product_id = list()
+low_qty_id = list()

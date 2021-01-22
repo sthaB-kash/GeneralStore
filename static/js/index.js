@@ -76,6 +76,8 @@ function deleteProduct(id, name){
 $(".notification-box").click(handler);
 
 $('body').click(function(){
-    if (document.querySelector('.notification-box').style.display == 'inline-block')
+    if (document.querySelector('.notification-box').style.display == 'inline-block'){
+        $('.notification-box').html('');
         $('.notification-box').css('display', 'none');
+    }
 });

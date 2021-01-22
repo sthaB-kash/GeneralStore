@@ -10,3 +10,29 @@
     </div>
     {% endfor %}
 </div>
+
+
+<script>
+    $('.notification-box-content').click(function(){
+        var notificationId = $(this).attr('id');
+        if (notificationId == 1){
+            getSelectedNotification(notificationId);
+        }else if(notificationId == 2){
+            getSelectedNotification(notificationId);
+        }else if(notificationId == 5){
+            getSelectedNotification(notificationId);
+        }
+    });
+
+    function getSelectedNotification(key){
+        $.ajax({
+            url: '/notification/',
+            type: 'get',
+            data: {'key': key },
+            success: function(response){
+                console.log(response);
+                $('#showSelectedNotification').html(response);
+            }
+        });
+    }
+</script>
