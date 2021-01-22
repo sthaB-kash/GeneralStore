@@ -44,12 +44,17 @@
                 <li class="nav-item" role="presentation">
                   <a class="nav-link" id="billing-tab" data-toggle="tab" href="#billing" role="tab" aria-controls="billing" aria-selected="false">Billing</a>
                 </li>
+
                 <li class="nav-item" role="presentation">
                   <a class="nav-link" id="suppliers-tab" data-toggle="tab" href="#suppliers" role="tab" aria-controls="suppliers" aria-selected="false">Suppliers</a>
                 </li>
+
+                {% if request.user.is_staff %}
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="customers-tab" data-toggle="tab" href="#customers" role="tab" aria-controls="customers" aria-selected="false">Customers</a>
                 </li>
+                {% endif %}
+
                 {% if request.user.is_superuser %}
                 <li class="nav-item" role="presentation">
                     <a class="nav-link" id="reports-tab" data-toggle="tab" href="#reports" role="tab" aria-controls="reports" aria-selected="false">Reports</a>
@@ -73,6 +78,17 @@
 
         </div>
         <span class="navbar-text" style="float:right">
+            {% if request.user.is_staff %}
+            <span class="notification ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="yellow" class="bi bi-bell-fill" viewBox="0 0 16 16">
+                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                </svg>
+
+                <span class="no-of-notification">{{ notification }}</span>
+            </span>
+            <span style="position: relative;"><span class="notification-box fade-in"></span></span>
+            {% endif %}
+
              <span class="">Hello, {{request.user}}
                  <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
 							width="36" height="36"
@@ -80,7 +96,7 @@
 							style=" fill:#000000;">
 							<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#2ecc71"><path d="M113,21.1875c-50.62378,0 -91.8125,41.18872 -91.8125,91.8125c0,50.62378 41.18872,91.8125 91.8125,91.8125c50.62378,0 91.8125,-41.18872 91.8125,-91.8125c0,-50.62378 -41.18872,-91.8125 -91.8125,-91.8125zM113,35.3125c42.98194,0 77.6875,34.70557 77.6875,77.6875c0,42.98194 -34.70556,77.6875 -77.6875,77.6875c-42.98193,0 -77.6875,-34.70556 -77.6875,-77.6875c0,-42.98193 34.70557,-77.6875 77.6875,-77.6875zM113,56.5c-19.42187,0 -35.3125,15.89063 -35.3125,35.3125c0,10.7041 4.99341,20.22192 12.58008,26.70508c-15.89062,8.24878 -26.70508,24.85669 -26.70508,43.91992h14.125c0,-19.5874 15.7251,-35.3125 35.3125,-35.3125c19.58741,0 35.3125,15.7251 35.3125,35.3125h14.125c0,-19.06323 -10.81445,-35.67114 -26.70508,-43.91992c7.58667,-6.48316 12.58008,-16.00098 12.58008,-26.70508c0,-19.42187 -15.89062,-35.3125 -35.3125,-35.3125zM113,70.625c11.78003,0 21.1875,9.40747 21.1875,21.1875c0,11.78003 -9.40747,21.1875 -21.1875,21.1875c-11.78003,0 -21.1875,-9.40747 -21.1875,-21.1875c0,-11.78003 9.40747,-21.1875 21.1875,-21.1875z"></path></g></g></svg>
                  {% if not request.user.is_superuser %}
-                    <a href="{% url 'logout' %}">Logout</a>
+                    <a href="{% url 'logout' %}" class="text-white">Logout</a>
                  {% endif %}
              </span>
         </span>
@@ -135,7 +151,7 @@
                                 <span></span>
                                 <img class="card-img-top" src="{% static 'images/project-customer-purchase.jpg' %}"/>
                                 <div class="card-value c-value">457</div>
-                                <p class="">Customers</p>
+                                <p class="">Transactions</p>
                             </div>
                             <div class="card">
                                 <span></span>
@@ -432,9 +448,12 @@
                 <!-- qty input for product -->
                 <div id="qty-qrcode"></div>
                 <!--print button-->
-                <div style="width:50%; margin: 50px auto;">
+                <div style="width:50%; margin: 50px auto;margin-bottom: 10px;">
                     {% csrf_token %}
                     <button id="print-btn" class="btn  btn-outline-success print-btn" style="width:100%;">Print</button>
+                </div>
+                <div style="width:50%; margin: 50px auto;margin-top:0;">
+                    <button id="print-cancel-btn" class="btn  btn-danger" style="width:100%;">Cancel</button>
                 </div>
 
             <!--only for testing start -->
@@ -486,12 +505,6 @@
                                             <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
                                         </svg>
                                     </button></a>
-                                    <a href="#" title="Delete"><button class=" btn btn-danger">
-                                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                                        </svg>
-                                    </button></a>
                                 </td>
                              </tr>
                         {% endfor %}
@@ -514,9 +527,9 @@
       <!--about general store-->
       <div class="general-store text-center mt-5 pt-5">
         <p class="display-1 text-primary"> XYZ GeneralStore</p>
-        <p class="text-muted">Bikash Shrestha</p>
+        <p class="text-muted">Bikash Shrestha | Santosh Lamichhane | Sujata Khatri</p>
         <div class="display-4 text-dark">
-            short description about GeneralStore
+            Quality Product Is Our Commitment
         </div>
       </div>
 
@@ -580,13 +593,14 @@
     //------------------------delete product start ------------------------------------
     $('.del-product').click(function(){
         $('#del-product').attr('href', $(this).parent().attr('id'));
-        alert($(this).parent().attr('id')+'/');
+        //alert($(this).parent().attr('id')+'/');
     });
     //------------------------detele product end --------------------------------
 
 
     //------------------------dynamic billing------------------------------------------
     //$('#billing-tab').tab('show');
+
     $('#qrcode-billing').click(function(){
         $.ajax({
             url: '{% url "QrcodeBilling" %}',
@@ -684,7 +698,7 @@
                         var discount_amt = calculated_total_sum*dis;
                         $('.dis-val').html(discount_amt.toFixed(2));
                         $('.g-total').html((calculated_total_sum - discount_amt).toFixed(2));
-                        $('#amt-in-words').html(amountInWords());
+                        $('#amt-in-words').html(amountInWords($('.g-total').html()));
                    });
                    PRINT = 1;
 
@@ -859,30 +873,33 @@
                 console.log(response.success);
                 if(response.success){
                     alert('clear');
-                    $('.removable').each(function(){
-                        $(this).hide();
-                        tr = 1;
-                    });
-                    $('.particular').val('');
-                    $('.qty').val('');
-                    $('.price').html('00.00');
-                    $('.total').html('00.00');
-                    $('.total-amt').html('00.00');
-                    $('.g-total').html('00.00');
-                    $('.dis-val').html('00.00');
-                    $('#input-discount').val('0')
-                    $('#amt-in-words').html('');
-
-                    $('#customer-name').val('');
-                    $('#customer-address').val('');
-                    $('#customer-contact').val('');
-                    $('#customer-name').focus();
+                    clearBill();
                 }else
                     alert('error');
             }
         });
 
         //alert("deduct");
+   }
+   function clearBill(){
+        $('.removable').each(function(){
+            $(this).hide();
+            tr = 1;
+        });
+        $('.particular').val('');
+        $('.qty').val('');
+        $('.price').html('00.00');
+        $('.total').html('00.00');
+        $('.total-amt').html('00.00');
+        $('.g-total').html('00.00');
+        $('.dis-val').html('00.00');
+        $('#input-discount').val('0')
+        $('#amt-in-words').html('');
+
+        $('#customer-name').val('');
+        $('#customer-address').val('');
+        $('#customer-contact').val('');
+        $('#customer-name').focus();
    }
 
    function makeBill(){
@@ -926,6 +943,13 @@
   }
 
    //---------------print bill end ----------------------------
+
+   //cancel print
+   $('#print-cancel-btn').click(function(){
+        clearBill();
+   });
+
+
    //---------------remove row start----------------------------------
    function removeThisRow(){
        $('.particular').keyup(function(e){
@@ -969,7 +993,7 @@
   <script src="{% static 'js/get_all_product_details.js' %}?{% now 'U' %}"></script>
   <script src="{% static 'js/users.js' %}?{% now 'U' %}"></script>
 
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
         <script>
 

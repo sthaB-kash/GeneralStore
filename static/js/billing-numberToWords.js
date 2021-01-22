@@ -21,7 +21,7 @@ var num = {
 
        //document.querySelector('.qty').addEventListener('input',
        function amountInWords(amt){
-            //console.log("selected");
+            console.log(amt);
             var amount = Number(amt).toFixed(2);
             amount = amount.split('.');
             var rupees = ''

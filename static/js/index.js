@@ -52,5 +52,30 @@ function deleteProduct(id, name){
     document.querySelector('#deleteMsg').innerHTML = "<strong>"+name+"</strong>";
     $('#del-product').attr('href', '');
     //document.querySelector('#del-product').href
-    alert($('.del-product').parent().attr('id'))
  }
+
+
+ // for notification
+ $('.notification').click(function(){
+    //alert('im clicked');
+    $.ajax({
+        url: '/notification/',
+        type: 'get',
+        success: function(response){
+            $('.notification-box').html(response);
+
+            $('.notification-box').css('display', 'inline-block');
+        }
+    });
+ });
+
+//hide .notification-box when clicked outside of it
+ function handler(event) {
+      event.stopPropagation();
+ }
+$(".notification-box").click(handler);
+
+$('body').click(function(){
+    if (document.querySelector('.notification-box').style.display == 'inline-block')
+        $('.notification-box').css('display', 'none');
+});

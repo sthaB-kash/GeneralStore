@@ -2,7 +2,7 @@
 # Create your views here.
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from .models import Product, Supplier, Students, Customer, Bill, Particulars
+from .models import Product, Supplier, Students, Customer, Bill, Particulars, Notification
 from django.contrib import messages
 from django.db.models import Q
 import json
@@ -21,7 +21,7 @@ from django.shortcuts import get_object_or_404
 # prevent from accessing page without login
 from django.contrib.auth.decorators import login_required
 
-import datetime
+from datetime import datetime, date
 import cv2
 import numpy as np
 import pyzbar.pyzbar as pyzbar
@@ -103,10 +103,59 @@ def index(request):
         no_of_suppliers = all_suppliers.count()
         sn = all_products.count()
         # customers = Bill.objects.all()
+
+
+        # check for expiry date
+        today = datetime.now().date()
+        product_expiry = Product.objects.all().values('id', 'exp', 'qty')
+        product_expiry_id = list()
+        expired_product_id = list()
+        low_qty_id = list()
+        for product in product_expiry:
+            diff = product['exp'] - today
+            if (diff.days <= 55) and (diff.days > 0):
+                product_expiry_id.append(product['id'])
+            elif diff.days <= 0:
+                expired_product_id.append(product['id'])
+            else:
+                pass
+
+            low_qty_value = 20
+            if product['qty'] < 20:
+                low_qty_id.append(product['id'])
+
+        print(product_expiry_id)
+        print(expired_product_id)
+        product_near_expiry_date = len(product_expiry_id)
+
+        if product_near_expiry_date > 0:
+            msg = Notification.objects.get(id=1)
+            msg.des = str(product_near_expiry_date)+' products are near expiry date'
+            msg.save()
+
+        expired_product = len(expired_product_id)
+        if expired_product > 0:
+            msg = Notification.objects.get(id=2)
+            msg.des = str(expired_product)+' products have been expired'
+            msg.save()
+
+        low_qty = len(low_qty_id)
+        if low_qty > 0:
+            msg = Notification.objects.get(id=5)
+            msg.des = str(low_qty) + ' products are below 20'
+            msg.save()
+
+        notification = Notification.objects.filter(unread=True).count()
+
         return render(request, "index.html", {'products': all_products, 'sn': sn, 'suppliers': all_suppliers,
-                                              'no_of_suppliers': no_of_suppliers })
+                                              'no_of_suppliers': no_of_suppliers, 'notification': notification})
     except:
         return render(request, "index.html")
+
+
+def notification(request):
+    notifi = Notification.objects.filter(unread=True)
+    return render(request, "notification.html", {'notification': notifi})
 
 
 def users(request):
@@ -190,6 +239,9 @@ def add_product(request):
     Product.objects.create(pid=p_id, pname=p_name, category=category, price=price, qty=qty,
                            total_price=total_price, mfd=mfd, exp=exp, supplier_id=sid)
     messages.success(request, 'Product Added Successfully.')
+
+    product_added_notification = Notification(des='Product Added: ' + p_name)
+    product_added_notification.save()
     return redirect('/')
 
 
@@ -222,6 +274,8 @@ def update_product(request, pid):
         pass
     product.save()
     messages.success(request, 'Product Updated Successfully.')
+    product_updated_notification = Notification(des=product.pname + ' is updated.')
+    product_updated_notification.save()
     return redirect('/')
 
 
@@ -229,6 +283,8 @@ def delete_product(request, pid):
     product = Product.objects.get(id=pid)
     product.delete()
     messages.success(request, "Product Deleted Successfully.")
+    product_deleted_notification = Notification(des=product.pname + ' is deleted.')
+    product_deleted_notification.save()
     return redirect('/')
 
 
@@ -374,8 +430,15 @@ def customer_receipt(request):
     return JsonResponse({'receipt': bill, 'customer': customer, 'particulars': particulars}, safe=False)
 
 
+def product_transaction_supplier(request):
+    n_p = Product.objects.all().count()
+    nt = Bill.objects.all().count()
+    ns = Supplier.objects.all().count()
+    return JsonResponse({'np': n_p, 'nt': nt, 'ns': ns}, safe=False)
+
+
 def customer_details(request):
-    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    date = datetime.now().strftime("%Y-%m-%d")
     data = request.GET.get('data')
     #
     if request.GET.get('customer_search') == '1':

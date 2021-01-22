@@ -35,6 +35,59 @@ html {
 .navbar-toggler {
     padding: 0!important;
 }
+.notification {
+    margin-right: 15px;
+    position: relative;
+}
+.no-of-notification {
+    border: 1px solid #fff;
+    border-radius: 50%;
+    background: #f00;
+    color: #fff;
+    font-size: .8rem;
+    position: absolute;
+    top: 0;
+    right: -51%;
+    transform: translate(-50%, -45%);
+    padding: 0.1rem .4rem;
+}
+.notification-box {
+    background: whitesmoke;
+    box-shadow: 2px 2px 3px 2px grey;
+    position: absolute;
+    z-index: 5;
+    width: 300px;
+    max-height: 600px;
+    overflow: auto;
+    top: 0%;
+    transform: translate(-114%, 10%);
+    display: none;
+    border-radius: 6px;
+}
+
+.notification-box-content {
+    color: #000;
+    background: rgba(25, 192, 192, 0.1);
+    margin: 0;
+    border-bottom: 1px solid gray;
+    padding: 20px 20px 5px 20px;
+    line-height: 10px;
+}
+.notification-msg {
+    font-size: 1rem;
+}
+.notification-time {
+    font-size: 0.7rem;
+    color: rgba(0,0,0,0.7);
+    text-align: right;
+    margin-bottom: 0;
+    padding-bottom: 4px;
+}
+
+.notification:hover {
+    cursor: pointer;
+}
+
 .general-store {
     display: none;
     color: #fff!important;

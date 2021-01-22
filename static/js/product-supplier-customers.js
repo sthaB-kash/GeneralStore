@@ -1,14 +1,40 @@
+
+var no_of_products = 15;
+var no_of_transactions = 32;
+var no_of_suppliers = 10;
+
+
+ function getProductTransactionSupplier(){
+    $.ajax({
+        url: '/product-transaction-supplier/',
+        type: 'get',
+        dataType: 'json',
+        success: function(response){
+            //console.log(response)
+            no_of_products = response.np;
+            no_of_transactions = response.nt;
+            on_of_suppliers = response.ns;
+            dynamicValues();
+            //console.log(no_of_products + ' ' + no_of_transactions + ' ' + on_of_suppliers);
+
+        }
+    });
+ }
+getProductTransactionSupplier();
+
     function dynamicValues(){
-        var s_value = 140;//Number($('.s-value').html());
-        var c_value = 5040, p_value = 4000;
+        clearTimer();
+        var s_value = on_of_suppliers;
+        var c_value = no_of_transactions, p_value = no_of_products;
         var s_incr = getIncrement(s_value);
         var c_incr = getIncrement(c_value), p_incr = getIncrement(p_value);
         var init_s_value = 0, init_c_value= 0, init_p_value = 0;
         $('.s-value').html(init_s_value);
         $('.c-value').html(init_c_value);
         $('.p-value').html(init_p_value);
-
         //console.log(s_value);
+
+//        //console.log(s_value);
         var stop_s = setInterval(function(){
             $('.s-value').html(init_s_value+=s_incr);
             if(init_s_value >= s_value){
@@ -33,7 +59,7 @@
                 $('.p-value').html(p_value)
             }
         },((p_value < 100) ? 50: (p_value <500)? 20: (p_value<1000)?10:(p_value<2000)?5:2));
-        //setTimeout(function(){clearInterval(stop)},2000);
+//        //setTimeout(function(){clearInterval(stop)},2000);
 
     }
     //function to return increment value for each
@@ -52,10 +78,10 @@
         return incr;
     }
 
-    dynamicValues();
+    //dynamicValues();
     $('#products-tab').click(function(){
         updatedProducts();
-        dynamicValues();
+        getProductTransactionSupplier();
     });
 
     function updatedProducts(){
@@ -81,3 +107,16 @@
             }
         });
      });
+
+
+
+     function clearTimer(){
+        try{
+            clearInterval(stop_s);
+            clearInterval(stop_p);
+            clearInterval(stop_c);
+        }catch(e){
+            //window.alert("timer not working");
+            //console.log(e);
+        }
+     }

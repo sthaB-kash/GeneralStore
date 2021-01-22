@@ -1,0 +1,12 @@
+<div class="notification-box-inside">
+    {% for msg in notification %}
+    <div id="{{ msg.id }}" class="notification-box-content">
+        <p class="notification-msg">
+            {{ msg.des }}
+        </p>
+        <p class="notification-time">
+            {{ msg.date_time }}
+        </p>
+    </div>
+    {% endfor %}
+</div>

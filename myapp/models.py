@@ -107,6 +107,31 @@ class Particulars(models.Model):
         return str(self.bill.id)
 
 
+class Notification(models.Model):
+    des = models.CharField(max_length=200)
+    date_time = models.DateTimeField(auto_now=True)
+    unread = models.BinaryField(default=True)
+    user = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = "notifications"
+
+    def __str__(self):
+        return str(self.date_time)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class Students(models.Model):
     sid = models.IntegerField()
     name = models.CharField(max_length=50)

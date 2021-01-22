@@ -1,3 +1,15 @@
+<div class="container chart my-3 p-4">
+    <div class="row ">
+        <canvas class="col-md-6"id="chart"></canvas>
+        <canvas class="col-md-6"id="myChart"></canvas>
+    </div>
+</div>
+
+
+<style>
+
+</style>
+
 <div class="all-reports-div container">
     <div class=""><p>Today's Transaction Report</p></div>
     <div class="">
@@ -11,3 +23,72 @@
     </div>
     <div class=""><p>Summary</p></div>
 </div>
+
+
+
+
+<script>
+    var c = document.getElementById('chart').getContext('2d');
+var chart = new Chart(c, {
+    // The type of chart we want to create
+    type: 'line',
+
+    // The data for our dataset
+    data: {
+        labels: ['August', 'September', 'October', 'November', 'December','January', 'February'],
+        datasets: [{
+            label: 'Purchased Products',
+            backgroundColor: 'rgba(67, 109, 201, 0.8)',
+            borderColor: 'gray',
+            data: [10, 6, 5, 2, 20, 30, 5]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+</script>
+
+
+
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        datasets: [{
+            label: 'Sold',
+            data: [1, 5, 3, 5, 2, 3, 9],
+            backgroundColor: [
+                'rgba(255, 255, 0, 0.5)',
+                'rgba(54, 12, 235, 0.4)',
+                'rgba(255, 06, 86, 0.4)',
+                'rgba(25, 192, 192, 0.5)',
+                'rgba(60, 179, 1, 0.4)',
+                'rgba(255, 159, 64, 0.4)',
+                'rgba(63, 124, 158, 0.5)'
+            ],
+            borderColor: [
+                'rgba(255, 225, 0, 1)',
+                'rgba(54, 12, 235, 1)',
+                'rgba(255, 06, 86, 1)',
+                'rgba(25, 192, 192, 1)',
+                'rgba(60, 179, 0, 1)',
+                'rgba(255, 159, 64, 1)',
+                'rgba(63, 124, 158, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
